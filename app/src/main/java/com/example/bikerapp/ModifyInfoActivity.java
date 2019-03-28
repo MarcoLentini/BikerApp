@@ -1,10 +1,13 @@
 package com.example.bikerapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,6 +39,8 @@ public class ModifyInfoActivity extends AppCompatActivity {
                 etEditInfo.setHint("username");
                 etEditInfo.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
                 etEditInfo.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+                //etEditInfo.setSelectAllOnFocus(true);
+                etEditInfo.selectAll();
             break;
             case "user_email":
                 tvInfoMessage.setText("Type your email address");
@@ -58,6 +63,9 @@ public class ModifyInfoActivity extends AppCompatActivity {
                 etEditInfo.setMinLines(3);
             break;
         }
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(etEditInfo , InputMethodManager.SHOW_IMPLICIT);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
