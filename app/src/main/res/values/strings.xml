@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">BikerApp</string>
+    <string name="default_user_name">Insert username</string>
+    <string name="default_user_email">Insert email</string>
+    <string name="default_user_description">Insert short description</string>
+    <string name="default_user_phone_number">Insert phone number</string>
+    <string name="name_field_id">user_name</string>
+    <string name="email_field_id">user_email</string>
+    <string name="phone_number__field_id">user_phone_number</string>
+    <string name="description_field_id">user_description</string>
+
 
 </resources>
