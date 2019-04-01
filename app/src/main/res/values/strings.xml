@@ -9,5 +9,9 @@
     <string name="phone_number__field_id">user_phone_number</string>
     <string name="description_field_id">user_description</string>
 
+    <string name="take_">user_description</string>
+
+
+
 
 </resources>
