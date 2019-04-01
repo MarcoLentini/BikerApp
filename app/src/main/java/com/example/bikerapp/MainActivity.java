@@ -185,12 +185,13 @@ public class MainActivity extends AppCompatActivity {
 
     private static Uri setImageUri(Context context) {
         String autorithy = String.format(Locale.getDefault(), AuthorityFormat, context.getPackageName());
-        return FileProvider.getUriForFile(context, autorithy, () -> {
-            String timeStamp =
-                    new SimpleDateFormat("yyyyMMdd_HHmmss",
-                            Locale.getDefault()).format(new Date());
-            String imageFileName = "IMG_" + timeStamp + "_";
-            return (File) Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        });
+        return FileProvider.getUriForFile(context, autorithy,getFile_());
+        }
+
+    private static File getFile_(){
+        String timeStamp =
+                new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        return (File) Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     }
 }

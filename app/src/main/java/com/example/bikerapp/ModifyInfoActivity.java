@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 public class ModifyInfoActivity extends AppCompatActivity {
 
@@ -28,6 +29,8 @@ public class ModifyInfoActivity extends AppCompatActivity {
         etEditInfo = findViewById(R.id.editTextChangeInfo);
         btnOk = findViewById(R.id.buttonOk);
         btnCancel = findViewById(R.id.buttonCancel);
+
+
 
         Intent receivedIntent = getIntent();
         fieldName = receivedIntent.getExtras().getString("field");
