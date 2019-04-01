@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fab_margin">16sp</dimen>
+    <dimen name="toolbar_profile_width">160sp</dimen>
+    <dimen name="dimen_20sp">20sp</dimen>
+    <dimen name="activity_padding">16sp</dimen>
+    <dimen name="profile_title">23sp</dimen>
+    <dimen name="profile_desc">13sp</dimen>
+    <dimen name="meta_count">20sp</dimen>
+    <dimen name="meta_label">12sp</dimen>
+    <dimen name="dimen_40sp">40sp</dimen>
+    <dimen name="ic_plus_width">48sp</dimen>
+</resources>
