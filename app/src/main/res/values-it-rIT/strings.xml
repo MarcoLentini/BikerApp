@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">BikerApp</string>
+    <string name="default_user_name">Inserisci username</string>
+    <string name="default_user_email">Inserisci email</string>
+    <string name="default_user_description">Inserisci  descrizione</string>
+    <string name="default_user_phone_number">Inserisci telefono</string>
+    <string name="name_field_id">user_name</string>
+    <string name="email_field_id">user_email</string>
+    <string name="pwd_field_id">user_password</string>
+    <string name="phone_number__field_id">user_phone_number</string>
+    <string name="description_field_id">user_description</string>
+    <string name="InfoTitle">Informazioni</string>
+    <string name="username_title">Username</string>
+    <string name="email_title">Email</string>
+    <string name="phone_number_title">Numero di telefono</string>
+    <string name="description_title">Descrizione</string>
+    <string name="password_title">Cambia Password</string>
+    <string name="insert_old_password">Inserisci  password attuale</string>
+    <string name="insert_password">Inserisci la nuova password</string>
+    <string name="repeat_password">Re-inseririsci la nuova password</string>
+    <string name="invalid_password">Password invalida</string>
+    <string name="different_password">Le due password sono diverse</string>
+    <string name="ok_button">OK</string>
+    <string name="cancel_button">ANNULLA</string>
+    <string name="insert_username">Inserisci il tuo username</string>
+    <string name="insert_email">Inserisci la tua email</string>
+    <string name="insert_phone_number">Inserisci il tuo numero di telefono</string>
+    <string name="insert_description">Descrivi te stesso</string>
+    <string name="take_a_picture">Scatta una foto</string>
+    <string name="pick_from_gallery">Usa foto dalla Galleria</string>
+    <string name="select_photo">Seleziona una foto</string>
+    <string name="perm_needed">Permesso Necessario</string>
+    <string name="ok_string">Ok</string>
+    <string name="cancel_string">Annulla</string>
+    <string name="perm_why_2">Questo permesso è necessario per scattare una foto</string>
+    <string name="perm_why_1">Questo permesso è necessario per prendere una foto dalla Galleria</string>
+    <string name="perm_denied">Permesso Negato</string>
+    <string name="image_disappear">L\'immagine selezionata non è più disponibile</string>
+
+</resources>

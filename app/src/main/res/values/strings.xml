@@ -1,17 +1,54 @@
 <resources>
     <string name="app_name">BikerApp</string>
+    <string name="InfoTitle">Information</string>
+
+    <!-- Main Activity (Empty) -->
     <string name="default_user_name">Insert username</string>
     <string name="default_user_email">Insert email</string>
     <string name="default_user_description">Insert short description</string>
     <string name="default_user_phone_number">Insert phone number</string>
+
+    <!-- Field -->
     <string name="name_field_id">user_name</string>
     <string name="email_field_id">user_email</string>
+    <string name="pwd_field_id">user_password</string>
     <string name="phone_number__field_id">user_phone_number</string>
     <string name="description_field_id">user_description</string>
 
-    <string name="take_">user_description</string>
+
+    <!-- Modify Activity -->
+    <string name="username_title">Username</string>
+    <string name="email_title">Email</string>
+    <string name="phone_number_title">Phone number</string>
+    <string name="description_title">Description</string>
+    <string name="password_title">Change Password</string>
+    <string name="insert_old_password">Insert your actual password</string>
+    <string name="insert_password">Insert the new password</string>
+    <string name="repeat_password">Repeat the password</string>
+    <string name="invalid_password">Invalid password</string>
+    <string name="different_password">The two password are different</string>
+    <string name="insert_username">Type your username</string>
+    <string name="insert_email">Type your email address</string>
+    <string name="insert_phone_number">Type your phone number</string>
+    <string name="insert_description">Type a short description about you</string>
+
+    <!-- Generic -->
+    <string name="ok_button">OK</string>
+    <string name="cancel_button">CANCEL</string>
 
 
+    <!-- Image Profile -->
+    <string name="select_photo">Select photo</string>
+    <string name="take_a_picture">Take a picture</string>
+    <string name="pick_from_gallery">Pick from gallery</string>
+    <string name="cancel_string">Cancel</string>
+    <string name="image_disappear">The selected image is no longer available</string>
 
+    <!-- Permission -->
+    <string name="perm_needed">Permission needed</string>
+    <string name="perm_why_1">This permission is needed to pick a photo from gallery</string>
+    <string name="perm_why_2">This permission is needed to take photo</string>
+    <string name="ok_string">Ok</string>
+    <string name="perm_denied">Permission Denied</string>
 
 </resources>
