@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
                         if (!userDescription.equals("")) {
                             editor.putString("userDescription", userDescription);
                             editor.commit();
-                            tvUserDescription.setText(R.string.description_title);
+                            tvUserDescription.setText(userDescription);
                         }
                         break;
                     case "user_password":
