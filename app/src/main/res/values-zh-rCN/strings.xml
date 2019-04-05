@@ -31,5 +31,19 @@
     <string name="insert_email">请输入邮箱</string>
     <string name="insert_phone_number">请输入电话号码</string>
     <string name="insert_description">请输入个人简介</string>
+    
+    <!-- Image Profile -->
+    <string name="select_photo">选择照片</string>
+    <string name="take_a_picture">拍摄照片</string>
+    <string name="pick_from_gallery">从相册选择</string>
+    <string name="cancel_string">取消</string>
+    <string name="image_disappear">选择的照片不可用</string>
+
+    <!-- Permission -->
+    <string name="perm_needed">请求权限</string>
+    <string name="perm_why_1">请求从相册选择照片的权限</string>
+    <string name="perm_why_2">请求拍摄照片的权限</string>
+    <string name="ok_string">确认</string>
+    <string name="perm_denied">没有权限</string>
 
 </resources>
