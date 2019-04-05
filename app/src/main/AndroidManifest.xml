@@ -25,7 +25,9 @@
                 android:resource="@xml/file_paths"/>
         </provider>
         <activity android:name=".ModifyInfoActivity"></activity>
+        <activity android:name=".ChangePwdActivity"></activity>
         <activity android:name=".MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

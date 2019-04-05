@@ -168,6 +168,7 @@
                 android:drawableRight="@drawable/ic_account_edit"
                 android:drawablePadding="12dp"
                 android:maxEms="20"
+                android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@string/default_user_description"
                 android:textAppearance="@android:style/TextAppearance.Large"

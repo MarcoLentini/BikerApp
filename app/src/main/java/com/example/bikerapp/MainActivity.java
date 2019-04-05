@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             tvUserPhoneNumber.setText(userPhoneNumber);
         userDescription = sharedPref.getString("userDescription", "");
         if(!userDescription.equals(""))
-            tvUserDescription.setText(R.string.description_title);
+            tvUserDescription.setText(userDescription);
         userPassword = sharedPref.getString("userPassword", "");
         uriSelectedImage = Uri.parse(sharedPref.getString("userImage", ""));
         if(!uriSelectedImage.toString().equals("")) {
