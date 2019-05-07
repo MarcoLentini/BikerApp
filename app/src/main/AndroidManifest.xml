@@ -3,31 +3,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.bikerapp">
 
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/biker_logo"
         android:label="@string/app_name"
         android:roundIcon="@drawable/biker_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_task"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <provider
-            android:authorities="${applicationId}.fileprovider"
             android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:replace="android:authorities">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
-        <activity android:name=".ModifyInfoActivity"></activity>
-        <activity android:name=".ChangePwdActivity"></activity>
-        <activity android:name=".MainActivity">
 
+        <activity android:name=".Information.ModifyInfoActivity" />
+        <activity android:name=".Information.ChangePwdActivity" />
+        <activity android:name=".Information.BikerInformationActivity"/>
+
+        <activity
+            android:name=".Information.SignupActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Information.FirebaseAccount"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Information.ResetPasswordActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Information.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

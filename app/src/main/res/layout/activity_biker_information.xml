@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    tools:context=".MainActivity">
-
+    tools:context=".Information.BikerInformationActivity">
 
     <RelativeLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="@dimen/toolbar_profile_width"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        app:layout_constraintEnd_toStartOf="@+id/scrollView4"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="16dp">
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/img_profile"
@@ -68,66 +64,16 @@
     </RelativeLayout>
 
     <ScrollView
-        android:id="@+id/scrollView4"
         android:layout_width="331dp"
         android:layout_height="647dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/relativeLayout2"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/textViewUserName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:background="?attr/selectableItemBackground"
-                android:drawableStart="@drawable/ic_account_name"
-                android:drawableLeft="@drawable/ic_account_name"
-                android:drawableEnd="@drawable/ic_account_edit"
-                android:drawableRight="@drawable/ic_account_edit"
-                android:drawablePadding="12dp"
-                android:maxEms="10"
-                android:maxLines="1"
-                android:text="@string/default_user_name"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textViewUserEmail"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:background="?attr/selectableItemBackground"
-                android:drawableStart="@drawable/ic_account_email"
-                android:drawableLeft="@drawable/ic_account_email"
-                android:drawableEnd="@drawable/ic_account_edit"
-                android:drawableRight="@drawable/ic_account_edit"
-                android:drawablePadding="12dp"
-                android:maxEms="10"
-                android:maxLines="1"
-                android:text="@string/default_user_email"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewUserName" />
 
             <TextView
                 android:id="@+id/textViewUserPhoneNumber"
@@ -135,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:background="?attr/selectableItemBackground"
@@ -152,8 +98,34 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewUserEmail" />
 
+
+
             <TextView
-                android:id="@+id/textViewUserDescription"
+                android:id="@+id/textViewUserEmail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:drawableStart="@drawable/ic_account_email"
+                android:drawableLeft="@drawable/ic_account_email"
+                android:drawableEnd="@drawable/ic_account_edit"
+                android:drawableRight="@drawable/ic_account_edit"
+                android:drawablePadding="12dp"
+                android:maxEms="10"
+                android:maxLines="1"
+                android:text="@string/default_user_email"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewUserName" />
+
+
+            <TextView
+                android:id="@+id/textViewUserName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -162,20 +134,55 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:background="?attr/selectableItemBackground"
-                android:drawableStart="@drawable/ic_account_description"
-                android:drawableLeft="@drawable/ic_account_description"
+                android:drawableStart="@drawable/ic_account_name"
+                android:drawableLeft="@drawable/ic_account_name"
                 android:drawableEnd="@drawable/ic_account_edit"
                 android:drawableRight="@drawable/ic_account_edit"
                 android:drawablePadding="12dp"
-                android:maxEms="20"
-                android:ellipsize="end"
+                android:maxEms="10"
                 android:maxLines="1"
-                android:text="@string/default_user_description"
+                android:text="@string/default_user_name"
                 android:textAppearance="@android:style/TextAppearance.Large"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="395dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorDivider"
+                app:layout_constraintBottom_toTopOf="@+id/textViewUserPhoneNumber"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewUserEmail" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="395dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorDivider"
+                app:layout_constraintBottom_toTopOf="@+id/textViewChangePassword"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewUserPhoneNumber" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="395dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorDivider"
+                app:layout_constraintBottom_toTopOf="@+id/textViewUserEmail"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewUserName" />
 
             <TextView
                 android:id="@+id/textViewChangePassword"
@@ -183,7 +190,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:background="?attr/selectableItemBackground"
@@ -198,8 +205,12 @@
                 android:textAppearance="@android:style/TextAppearance.Large"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewUserDescription" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewUserPhoneNumber" />
+
         </android.support.constraint.ConstraintLayout>
 
     </ScrollView>
+
+
+
 </android.support.constraint.ConstraintLayout>

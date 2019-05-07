@@ -50,5 +50,61 @@
     <string name="perm_why_2">This permission is needed to take photo</string>
     <string name="ok_string">Ok</string>
     <string name="perm_denied">Permission Denied</string>
+    <string name="title_activity_task">MainActivity</string>
+    <string name="reservation_title">Reservations</string>
+    <string name="action_settings">Information</string>
+
+    <!-- reservation_item.xml-->
+    <string name="refuse_reservation_button">Refuse</string>
+    <string name="accept_reservation_button">Accept</string>
+
+    <!-- firebase-->
+    <string name="action_sign_in_short">Register</string>
+    <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="change_email">Change Email</string>
+    <string name="change_password">Change Password</string>
+    <string name="send_password_reset_email">Send Password reset email</string>
+    <string name="remove_user">Remove user</string>
+    <string name="new_pass">New Password</string>
+    <string name="title_activity_profile">Firebase</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_name">Fullname</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="btn_link_to_register">Not a member? Get registered in now!</string>
+    <string name="btn_link_to_login">Already registered. Login Me!</string>
+    <string name="title_activity_reset_password">ResetPasswordActivity</string>
+    <string name="btn_forgot_password">Forgot your password?</string>
+    <string name="btn_reset_password">Reset Password</string>
+    <string name="btn_back"><![CDATA[<< Back]]></string>
+    <string name="hint_new_email">New Email</string>
+    <string name="btn_change">Change</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_remove">Remove</string>
+    <string name="btn_sign_out">Sign Out</string>
+    <string name="lbl_forgot_password">Forgot password?</string>
+    <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
+    <string name="action_settings_firebase">Firebase Account</string>
+
+    <!-- activity_signup_biker-->
+    <string name="biker_name">Biker name</string>
+    <string name="biker_phone">Phone number</string>
+    <string name="biker_description">Your description</string>
+    <string name="complete_rest_btn">Complete registration</string>
+    <string name="username_updated">Username is updated.</string>
+    <string name="username_failed_update">Failed to update username!</string>
+    <string name="invalid_username">Invalid username. Use minimum 3 characters</string>
+    <string name="email_updated">Email address is updated. Please sign in with new email id!</string>
+    <string name="email_failed_updated">Failed to update email!</string>
+    <string name="phone_updated">Phone number is updated.</string>
+    <string name="phone_failed_updated">Failed to update phone number!</string>
+    <string name="invalid_mail">Enter valid email address!</string>
+    <string name="invalid_phone">Invalid phone number</string>
+    <string name="enter_email">Enter email address!</string>
+    <string name="became_biker">Became a biker!</string>
+    <string name="became_biker2">Do you want to became a biker?</string>
+    <string name="welcome_biker">Welcome among bikers!</string>
 
 </resources>

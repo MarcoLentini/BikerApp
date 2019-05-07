@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "791232135308",
+    "firebase_url": "https://foodapp-d1bf1.firebaseio.com",
+    "project_id": "foodapp-d1bf1",
+    "storage_bucket": "foodapp-d1bf1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791232135308:android:b313fc81562d6119",
+        "android_client_info": {
+          "package_name": "com.example.bikerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "791232135308-trgo1g1d9ul7mnl493ghvip85itvi9ik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIyYlr9xQI564rrnTbbTsG7XdSyp7ZL7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "791232135308-trgo1g1d9ul7mnl493ghvip85itvi9ik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791232135308:android:d12e6b257cdc8bf2",
+        "android_client_info": {
+          "package_name": "com.example.restaurateur"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "791232135308-trgo1g1d9ul7mnl493ghvip85itvi9ik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIyYlr9xQI564rrnTbbTsG7XdSyp7ZL7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "791232135308-trgo1g1d9ul7mnl493ghvip85itvi9ik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791232135308:android:59980fcf03742556",
+        "android_client_info": {
+          "package_name": "com.example.userapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "791232135308-trgo1g1d9ul7mnl493ghvip85itvi9ik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIyYlr9xQI564rrnTbbTsG7XdSyp7ZL7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "791232135308-trgo1g1d9ul7mnl493ghvip85itvi9ik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

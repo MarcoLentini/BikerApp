@@ -1,4 +1,4 @@
-package com.example.bikerapp;
+package com.example.bikerapp.Information;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.bikerapp.R;
 
 public class ChangePwdActivity extends AppCompatActivity {
 
@@ -63,7 +65,7 @@ public class ChangePwdActivity extends AppCompatActivity {
 
         btnOk.setOnClickListener(v -> {
             if(etEditPwd1.getText().toString().equals(etEditPwd2.getText().toString())) {
-                Intent retIntent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent retIntent = new Intent(getApplicationContext(), BikerInformationActivity.class);
                 Bundle bn = new Bundle();
                 String fieldValue= etEditPwd1.getText().toString();
                 bn.putString("field", fieldName);

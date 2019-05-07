@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="toolbar_profile_width">160sp</dimen>
-    <dimen name="activity_padding">16sp</dimen>
+<dimen name="toolbar_profile_width">160sp</dimen>
+<dimen name="activity_padding">16sp</dimen>
+
+
+
+<dimen name="dp156">156dp</dimen>
+<dimen name="dp8">8dp</dimen>
+<dimen name="dp16">16dp</dimen>
+<dimen name="dp24">24dp</dimen>
+<dimen name="dp56">56dp</dimen>
+<dimen name="dp4">4dp</dimen>
+<dimen name="dp96">96dp</dimen>
+
+
+<!-- Default screen margins, per the Android Design guidelines. -->
+<dimen name="activity_horizontal_margin">16dp</dimen>
+<dimen name="activity_vertical_margin">16dp</dimen>
+<dimen name="fab_margin">16dp</dimen>
+<dimen name="logo_w_h">100dp</dimen>
+<dimen name="standard_field_width">160dp</dimen>
+<dimen name="margin_1">8dp</dimen>
+<dimen name="margin_2">16dp</dimen>
 </resources>
