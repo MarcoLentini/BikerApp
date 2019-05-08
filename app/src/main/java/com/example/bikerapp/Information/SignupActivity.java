@@ -243,14 +243,14 @@ public class SignupActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK) {
             if(requestCode == CAMERA_REQUEST)  {
                 user_image = file_image;
-                Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.biker_image));
+                Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.img_profile));
 
 
             }
             if(requestCode == GALLERY_REQUEST){
 
                 user_image = data.getData();
-                Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.biker_image));
+                Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.img_profile));
 
             }
         }
@@ -274,7 +274,7 @@ public class SignupActivity extends AppCompatActivity {
             // Upload succeeded
             Log.d(TAG, "uploadFromUri: getDownloadUri success");
             user_image = downloadUri;
-            Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.biker_image));
+            Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.img_profile));
             try {
                 deleteImage();
             } catch (IOException e) {
