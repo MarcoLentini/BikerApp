@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.bikerapp.Information.BikerInformationActivity;
+import com.example.bikerapp.Information.LoginActivity;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -48,22 +49,13 @@ public class MainActivity extends AppCompatActivity {
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null || bikerKey.equals("")) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }
 
         //Get Firestore instance
         db = FirebaseFirestore.getInstance();
-        /*
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
- */
         ReservationsData = new ArrayList<>();
         fillWithData();
         loadFragment(new ReservationsMainFragment());
@@ -148,6 +140,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (auth.getCurrentUser() == null || bikerKey.equals("")) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+
+        }
 
     }
 }

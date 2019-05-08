@@ -39,9 +39,6 @@
             android:name=".Information.SignupActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Information.FirebaseAccount"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".Information.ResetPasswordActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity

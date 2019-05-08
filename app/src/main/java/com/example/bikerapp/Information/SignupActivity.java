@@ -170,8 +170,9 @@ public class SignupActivity extends AppCompatActivity {
                                         user.put("username", username);
                                         user.put("email", email);
                                         user.put("phone", phone);
-                                        uploadOnFirebase(file_image);
-                                        user.put("image_url", user_image.toString());
+                                        user.put("biker_id",bikerDRef.getId());
+                                    //    uploadOnFirebase(file_image);
+                                      //  user.put("image_url", user_image.toString());
                                         db.collection("users").document(auth.getCurrentUser().getUid())
                                                 .set(user)
                                                 .addOnSuccessListener(documentReference1 -> {
@@ -241,10 +242,16 @@ public class SignupActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK) {
             if(requestCode == CAMERA_REQUEST)  {
-                uploadOnFirebase(file_image);
+                user_image = file_image;
+                Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.biker_image));
+
+
             }
             if(requestCode == GALLERY_REQUEST){
-                uploadOnFirebase(data.getData());
+
+                user_image = data.getData();
+                Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.biker_image));
+
             }
         }
     }

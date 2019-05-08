@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.bikerapp.MainActivity;
 import com.example.bikerapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -24,6 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, BikerInformationActivity.class));
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
 
@@ -87,17 +90,19 @@ public class LoginActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         if (!task.isSuccessful()) {
                             // there was an error
-                            if (password.length() < 6) {
-                                inputPassword.setError(getString(R.string.minimum_password));
+                            if(!isValidEmail(email))
+                                inputPassword.setError(getString(R.string.invalid_mail));
+                           else if (!isValidPassword(password)) {
+                                inputPassword.setError(getString(R.string.invalid_password));
                             } else {
                                 Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                             }
                         } else {
 
 
-                            FirebaseFirestore.getInstance().collection("user").document(auth.getCurrentUser().getUid()).get()
+                            FirebaseFirestore.getInstance().collection("users").document(auth.getCurrentUser().getUid()).get()
                                     .addOnCompleteListener(taskBikerId -> {
-                                        if (task.isSuccessful()) {
+                                        if (taskBikerId.isSuccessful()) {
                                             DocumentSnapshot document = taskBikerId.getResult();
                                             if (document.exists()) {
                                                 String bikerID = (String) document.get("biker_id");
@@ -106,11 +111,11 @@ public class LoginActivity extends AppCompatActivity {
                                                     SharedPreferences.Editor editor = sharedPref.edit();
                                                     editor.putString("bikerKey", bikerID);
                                                     editor.commit();
-                                                    Intent intent = new Intent(LoginActivity.this, BikerInformationActivity.class);
+                                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                     startActivity(intent);
                                                     finish();
                                                 } else {
-                                                    // TODO first time registration of biker
+
                                                     new AlertDialog.Builder(this)
                                                             .setTitle(getString(R.string.became_biker))
                                                             .setMessage(getString(R.string.became_biker2))
@@ -136,11 +141,12 @@ public class LoginActivity extends AppCompatActivity {
                                                                                             .setTitle(getString(R.string.became_biker))
                                                                                             .setMessage(getString(R.string.welcome_biker))
                                                                                             .setPositiveButton(getString(R.string.ok_string), (dialog1, which1) -> {
-                                                                                                Intent retIntent;
-                                                                                                retIntent = new Intent(getApplicationContext(), BikerInformationActivity.class);
-                                                                                                startActivity(new Intent(LoginActivity.this, BikerInformationActivity.class));
+                                                                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                                                                                dialog.dismiss();
                                                                                                 finish();
-                                                                                            });
+                                                                                            })
+                                                                                            .create()
+                                                                                            .show();
                                                                                 } else {
 
                                                                                     Toast.makeText(LoginActivity.this, "Insert biker key failed." + task.getException(),
@@ -158,9 +164,14 @@ public class LoginActivity extends AppCompatActivity {
                                                 }
                                             } else {
                                                 Log.d("BikerID", "No such document");
+                                                Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+
+
                                             }
                                         } else {
                                             Log.d("BikerID", "get failed with ", task.getException());
+                                            Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+
                                         }
                                     });
 
@@ -168,6 +179,35 @@ public class LoginActivity extends AppCompatActivity {
                     });
         });
 
+
+    }
+
+    public boolean isValidPassword(final String password) {
+
+        Pattern pattern;
+        Matcher matcher;
+
+        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$";
+
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+
+        return matcher.matches();
+
+    }
+
+    public boolean isValidEmail(final String email) {
+
+        Pattern pattern;
+        Matcher matcher;
+
+        final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";;
+
+        pattern = Pattern.compile(EMAIL_PATTERN);
+        matcher = pattern.matcher(email);
+
+        return matcher.matches();
 
     }
     //sign out method

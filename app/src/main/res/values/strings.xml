@@ -65,7 +65,7 @@
     <string name="change_email">Change Email</string>
     <string name="change_password">Change Password</string>
     <string name="send_password_reset_email">Send Password reset email</string>
-    <string name="remove_user">Remove user</string>
+    <string name="remove_biker">Remove biker</string>
     <string name="new_pass">New Password</string>
     <string name="title_activity_profile">Firebase</string>
     <string name="title_activity_login">Sign in</string>
@@ -106,5 +106,7 @@
     <string name="became_biker">Became a biker!</string>
     <string name="became_biker2">Do you want to became a biker?</string>
     <string name="welcome_biker">Welcome among bikers!</string>
+    <string name="logout_title">Log out</string>
+    <string name="password_failed_updated">Failed to update password!</string>
 
 </resources>

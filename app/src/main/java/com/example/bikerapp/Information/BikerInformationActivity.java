@@ -50,13 +50,13 @@ public class BikerInformationActivity extends AppCompatActivity {
 
     private TextView tvUserName;
     private TextView tvUserEmail;
-    private TextView tvUserPhoneNumber;
-    private TextView tvUserDescription;
+    private TextView tvUserPhoneNumber, btnRemoveUser;
+    private TextView btnSignOut;
     private TextView tvUserPassword;
     private String userName;
     private String userEmail;
     private String userPhoneNumber;
-    private String userDescription;
+
     private String userPassword;
     private ImageView imageProfile;
     private Uri uriSelectedImage;
@@ -88,17 +88,19 @@ public class BikerInformationActivity extends AppCompatActivity {
         String title=getString(R.string.InfoTitle);
         getSupportActionBar().setTitle(title);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
         bikerKey = sharedPref.getString("bikerKey","");
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() == null || bikerKey.equals("")) {
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null || bikerKey.equals("")) {
             finish();
         }
-
-
-
 
         //Get Firestore instance
         db = FirebaseFirestore.getInstance();
@@ -115,7 +117,8 @@ public class BikerInformationActivity extends AppCompatActivity {
                                        // Uri.parse((String)doc.get("image_url"))
 
                                 );
-                            // Image Profile
+
+                                // Image Profile
 
                             ImageView imageAddButton = findViewById(R.id.background_img);
                             imageAddButton.setOnClickListener(v -> {
@@ -154,15 +157,44 @@ public class BikerInformationActivity extends AppCompatActivity {
                             tvUserPassword.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if(userPassword.equals(""))
-                                        invokeChangePwdActivity(getString(R.string.pwd_field_id));
-                                    else{
-                                        String idField = getString(R.string.pwd_field_id);
-                                        invokeModifyInfoActivity(idField, userPassword);
-
-                                    }
+                                    Intent intent = new Intent(getApplicationContext(), ModifyInfoActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("field", "user_password");
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
                                 }
                             });
+                            btnRemoveUser=findViewById(R.id.textViewRemoveUser);
+                            btnRemoveUser.setOnClickListener(v -> {
+                                if (user != null) {
+                                    //TODO: function su firebase che controlla se l'utente ha rest_id o user_id e lo elimini anche dall'auth
+                                    db.collection("bikers").document(bikerKey).delete()
+                                            .addOnSuccessListener(taskBikerId -> {
+                                                db.collection("users").whereEqualTo("biker_id",bikerKey).get()
+                                                        .addOnSuccessListener(document->{
+                                                            SharedPreferences.Editor editor = sharedPref.edit();
+                                                            editor.remove("bikerKey");
+                                                            Toast.makeText(BikerInformationActivity.this, "Your biker profile is deleted:( Create a account now!", Toast.LENGTH_SHORT).show();
+                                                            signOut();
+                                                            finish();
+                                                        })
+                                                        .addOnFailureListener(taskFailId -> {
+                                                            Log.d("BikerInfo", "failed delete bikerKey");
+                                                            Toast.makeText(BikerInformationActivity.this, "Failed to delete biker your account!", Toast.LENGTH_SHORT).show();
+                                                        });
+
+                                            })
+                                            .addOnFailureListener(taskFailId -> {
+                                                Log.d("BikerInfo", "failed delete biker");
+
+                                                Toast.makeText(BikerInformationActivity.this, "Failed to delete biker your account!", Toast.LENGTH_SHORT).show();
+                                            });
+
+                                }
+                            });
+                            btnSignOut=findViewById(R.id.textViewLogOut);
+                            btnSignOut.setOnClickListener(v -> signOut());
+
                             if(userInfo!=null) {
                                 userName = userInfo.getName();
                                 if (!userName.equals(""))
@@ -202,14 +234,6 @@ public class BikerInformationActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString("field", fieldName);
         bundle.putString("value", fieldNameValue);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, SECOND_ACTIVITY);
-    }
-    private void invokeChangePwdActivity( String fieldName) {
-        Intent intent = new Intent(getApplicationContext(), ChangePwdActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("field", fieldName);
-
         intent.putExtras(bundle);
         startActivityForResult(intent, SECOND_ACTIVITY);
     }
@@ -327,7 +351,7 @@ public class BikerInformationActivity extends AppCompatActivity {
             // Upload succeeded
             Log.d(TAG, "uploadFromUri: getDownloadUri success");
             user_image = downloadUri;
-            Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.biker_image));
+            Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.img_profile));
             try {
                 deleteImage();
             } catch (IOException e) {
@@ -459,12 +483,33 @@ public class BikerInformationActivity extends AppCompatActivity {
                     Toast.makeText(this, getString(R.string.perm_denied), Toast.LENGTH_SHORT).show();
                 break;
         }
+
+
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
+    //sign out method
+    public void signOut() {
+        auth.signOut();
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        finish();
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (auth.getCurrentUser() == null || bikerKey.equals("")) {
 
+            finish();
+
+        }
+    }
 
 
 
