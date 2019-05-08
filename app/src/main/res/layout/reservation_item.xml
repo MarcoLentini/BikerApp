@@ -85,7 +85,7 @@
                 android:layout_marginBottom="8dp">
 
                 <TextView
-                    android:id="@+id/textViewUserAddress"
+                    android:id="@+id/textViewUserInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -97,7 +97,7 @@
                     android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
-                    android:id="@+id/textViewUserInfo"
+                    android:id="@+id/textViewUserAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

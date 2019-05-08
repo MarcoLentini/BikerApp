@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 
 public class ReservationsMainFragment extends Fragment {
-    private RecyclerView.Adapter ReservationsAdapter;
+    public RecyclerView.Adapter ReservationsAdapter;
 
     private DatabaseReference databaseReference;
     public static final String Database_Path = "users";//TODO: inserire il path corretto

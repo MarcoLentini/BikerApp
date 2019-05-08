@@ -79,7 +79,7 @@ class ReservationListAdapter extends RecyclerView.Adapter<ReservationListAdapter
 
             nameRest = (TextView) itemView.findViewById(R.id.textViewRestaurantName);
             addrRest = (TextView) itemView.findViewById(R.id.textViewRestaurantAddress);
-           addrUser = (TextView) itemView.findViewById(R.id.textViewUserAddress);
+            addrUser = (TextView) itemView.findViewById(R.id.textViewUserAddress);
             infoUser = (TextView) itemView.findViewById(R.id.textViewUserInfo);
            // timeRest = (TextView) itemView.findViewById(R.id.textViewTimeRestaurant);
           //  timeUser = (TextView) itemView.findViewById(R.id.textViewTimeUser);

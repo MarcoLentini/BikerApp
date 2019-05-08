@@ -312,6 +312,9 @@ public class SignupActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         progressBar.setVisibility(View.GONE);
+        if(user_image == null){
+            user_image = file_image;
+        }
     }
 
     /** Permission Function **/

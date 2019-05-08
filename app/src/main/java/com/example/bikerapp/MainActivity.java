@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private String bikerKey;
     private static final String bikerDataFile = "BikerDataFile";
     public static ArrayList<ReservationModel> ReservationsData;
+    private ReservationsMainFragment reservationsMainFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
         ReservationsData = new ArrayList<>();
         fillWithData();
-        loadFragment(new ReservationsMainFragment());
+        reservationsMainFragment = new ReservationsMainFragment();
+        loadFragment(reservationsMainFragment);
     }
 
     @Override
@@ -105,17 +109,19 @@ public class MainActivity extends AppCompatActivity {
 
             if (e != null)
                 return;
+            ReservationsData.clear();
 
             for(DocumentChange dc : document.getDocumentChanges())
                 if(dc.getType() == DocumentChange.Type.ADDED)
-                {//TODO incremento
+                {
+                    //TODO incremento
                 }
             if (!document.isEmpty()) {
                 for (DocumentSnapshot doc : document) {
 
                     ReservationModel tmpReservationModel = new ReservationModel((Long) doc.get("rs_id"),
                             (String) doc.get("rest_name"),
-                            (String) doc.get("rest_addr"),
+                            (String) doc.get("rest_address"),
                             (String) doc.get("cust_address"),
                             (String) doc.get("notes"),
                             (String) doc.get("cust_name"),
@@ -126,9 +132,10 @@ public class MainActivity extends AppCompatActivity {
 
 
                     );
+                    ReservationsData.add(tmpReservationModel);
 
-
-                            ReservationsData.add(tmpReservationModel);
+                    RecyclerView.Adapter reservationsAdapter = reservationsMainFragment.ReservationsAdapter;
+                    reservationsAdapter.notifyDataSetChanged();
 
                 }
                 Collections.sort(ReservationsData);
