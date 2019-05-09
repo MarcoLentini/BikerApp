@@ -49,6 +49,7 @@ public class ModifyInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_info);
+
         tvInfoMessage = findViewById(R.id.textViewTypeInfo);
         etEditInfo = findViewById(R.id.editTextChangeInfo);
         btnOk = findViewById(R.id.buttonOk);
@@ -58,18 +59,18 @@ public class ModifyInfoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() == null) {
+        auth=FirebaseAuth.getInstance();
+
+        //get current user
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
             finish();
         }
 
 
-        //get current user
-         user = FirebaseAuth.getInstance().getCurrentUser();
-
-
         //Get Firestore instance
         db = FirebaseFirestore.getInstance();
+
         Intent receivedIntent = getIntent();
         fieldName = receivedIntent.getExtras().getString("field");
         final String fieldValue = receivedIntent.getExtras().getString("value");
@@ -86,6 +87,12 @@ public class ModifyInfoActivity extends AppCompatActivity {
                 etEditInfo.selectAll();
                 break;
             case "user_email":
+                title=getString(R.string.email_title);
+                getSupportActionBar().setTitle(title);
+                tvInfoMessage.setText(R.string.insert_old_password);
+                etEditInfo.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                break;
+            case "new_mail":
                 title=getString(R.string.email_title);
                 getSupportActionBar().setTitle(title);
                 tvInfoMessage.setText(R.string.insert_email);
@@ -135,12 +142,10 @@ public class ModifyInfoActivity extends AppCompatActivity {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String userName;
                 String userEmail;
                 String userPhoneNumber;
 
-                String userPassword;
                 switch (fieldName) {
                     case "user_password":
 
@@ -207,28 +212,58 @@ public class ModifyInfoActivity extends AppCompatActivity {
                         }
                         break;
                     case "user_email":
+                        credential = EmailAuthProvider
+                                .getCredential(user.getEmail(), etEditInfo.getText().toString());
+                        // Prompt the user to re-provide their sign-in credentials
+                        user.reauthenticate(credential)
+                                .addOnSuccessListener(aut -> {
+                                    Log.d("modifyInfo", "User re-authenticated.");
+                                    Intent intent1 = new Intent(getApplicationContext(), ModifyInfoActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("field", "new_mail");
+                                    bundle.putString("value", fieldValue);
+                                    intent1.putExtras(bundle);
+                                    startActivity(intent1);
+                                })
+                                .addOnFailureListener(noaut -> {
+                                    Log.d("modifyInfo", "User failed re-authenticated.");
+                                    Toast mioToast = Toast.makeText(ModifyInfoActivity.this,
+                                            getString(R.string.invalid_password),
+                                            Toast.LENGTH_LONG);
+                                    mioToast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 64);
+                                    InputMethodManager imm = (InputMethodManager)
+                                            getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    imm.showSoftInput(etEditInfo, InputMethodManager.SHOW_IMPLICIT);
+                                    mioToast.show();
+
+                                    etEditInfo.selectAll();
+                                });
+                        break;
+                    case "new_mail":
                         userEmail = etEditInfo.getText().toString();
                         if (isValidEmail(userEmail)) {
                             Map<String, Object> user_email = new HashMap<>();
                             user_email.put("email", userEmail);
                             user.updateEmail(userEmail)
                                     .addOnSuccessListener(task -> {
-                                            db.collection("users").document(auth.getCurrentUser().getUid()).update(user_email)
-                                                    .addOnSuccessListener(task1 -> {
+                                        db.collection("users").document(auth.getCurrentUser().getUid()).update(user_email)
+                                                .addOnSuccessListener(task1 -> {
                                                     Toast.makeText(ModifyInfoActivity.this, getString(R.string.email_updated), Toast.LENGTH_LONG).show();
                                                     signOut();
-                                                    finish(); })
-                                                    .addOnFailureListener(task1->{
-                                                        Log.d("BikerID", "Failed tast user db");
-                                                        Toast.makeText(ModifyInfoActivity.this, getString(R.string.email_failed_updated), Toast.LENGTH_LONG).show();;
-                                                        etEditInfo.selectAll();
-                                                    });
+                                                    finish();
                                                 })
-                                    .addOnFailureListener(task2-> {
-                                        Log.d("BikerID", "Failed update email auth");
+                                                .addOnFailureListener(task1 -> {
+                                                    Log.d("BikerID", "Failed tast user db"+task1.getMessage());
+                                                    Toast.makeText(ModifyInfoActivity.this, getString(R.string.email_failed_updated), Toast.LENGTH_LONG).show();
+                                                    ;
+                                                    etEditInfo.selectAll();
+                                                });
+                                    })
+                                    .addOnFailureListener(task2 -> {
+                                        Log.d("BikerID", "Failed update email auth"+task2.getMessage());
                                         Toast.makeText(ModifyInfoActivity.this, getString(R.string.email_failed_updated), Toast.LENGTH_LONG).show();
                                         etEditInfo.selectAll();
-                                                });
+                                    });
                         } else {
                             Toast mioToast = Toast.makeText(ModifyInfoActivity.this,
                                     getString(R.string.invalid_mail),

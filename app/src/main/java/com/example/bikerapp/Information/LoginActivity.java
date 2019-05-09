@@ -58,8 +58,6 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login);
         btnReset = findViewById(R.id.btn_reset_password_log);
 
-        //Get Firebase auth instance
-        auth = FirebaseAuth.getInstance();
 
         btnSignup.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, SignupActivity.class)));
 
@@ -92,95 +90,98 @@ public class LoginActivity extends AppCompatActivity {
                             // there was an error
                             if(!isValidEmail(email))
                                 inputPassword.setError(getString(R.string.invalid_mail));
-                           else if (!isValidPassword(password)) {
+                            else if (!isValidPassword(password)) {
                                 inputPassword.setError(getString(R.string.invalid_password));
                             } else {
                                 Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                             }
                         } else {
-
-
-                            FirebaseFirestore.getInstance().collection("users").document(auth.getCurrentUser().getUid()).get()
-                                    .addOnCompleteListener(taskBikerId -> {
-                                        if (taskBikerId.isSuccessful()) {
-                                            DocumentSnapshot document = taskBikerId.getResult();
-                                            if (document.exists()) {
-                                                String bikerID = (String) document.get("biker_id");
-                                                if (bikerID != null) {
-                                                    SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
-                                                    SharedPreferences.Editor editor = sharedPref.edit();
-                                                    editor.putString("bikerKey", bikerID);
-                                                    editor.commit();
-                                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                                    startActivity(intent);
-                                                    finish();
-                                                } else {
-
-                                                    new AlertDialog.Builder(this)
-                                                            .setTitle(getString(R.string.became_biker))
-                                                            .setMessage(getString(R.string.became_biker2))
-                                                            .setPositiveButton(getString(R.string.ok_string), (dialog, which) -> {
-                                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                                                DocumentReference bikerDRef = db.collection("bikers").document();
-
-                                                                Map<String, Object> biker = new HashMap<>();
-                                                                biker.put("user_id", auth.getCurrentUser().getUid());
-                                                                biker.put("status", "disabled");
-                                                                bikerDRef.set(biker)
-                                                                        .addOnSuccessListener(documentReference -> {
-                                                                            Map<String, Object> biker_id = new HashMap<>();
-                                                                            biker_id.put("biker_id", bikerDRef.getId());
-                                                                            db.collection("users").document(auth.getCurrentUser().getUid()).update(biker_id).addOnCompleteListener(task1 -> {
-                                                                                if (task1.isSuccessful()) {
-                                                                                    SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
-                                                                                    SharedPreferences.Editor editor = sharedPref.edit();
-                                                                                    editor.putString("bikerKey", bikerDRef.getId());
-                                                                                    editor.commit();
-
-                                                                                    new AlertDialog.Builder(this)
-                                                                                            .setTitle(getString(R.string.became_biker))
-                                                                                            .setMessage(getString(R.string.welcome_biker))
-                                                                                            .setPositiveButton(getString(R.string.ok_string), (dialog1, which1) -> {
-                                                                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                                                                                dialog.dismiss();
-                                                                                                finish();
-                                                                                            })
-                                                                                            .create()
-                                                                                            .show();
-                                                                                } else {
-
-                                                                                    Toast.makeText(LoginActivity.this, "Insert biker key failed." + task.getException(),
-                                                                                            Toast.LENGTH_SHORT).show();
-                                                                                    dialog.dismiss();
-                                                                                }
-                                                                            });
-                                                                        });
-                                                            })
-                                                            .setNegativeButton(getString(R.string.cancel_string), (dialog, which) -> {
-                                                                signOut();
-                                                                dialog.dismiss();
-                                                            })
-                                                            .create().show();
-                                                }
-                                            } else {
-                                                Log.d("BikerID", "No such document");
-                                                Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
-
-
-                                            }
-                                        } else {
-                                            Log.d("BikerID", "get failed with ", task.getException());
-                                            Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
-
-                                        }
-                                    });
-
+                            register_biker();
                         }
                     });
         });
 
 
     }
+
+    private void register_biker(){
+            FirebaseFirestore.getInstance().collection("users").document(auth.getCurrentUser().getUid()).get()
+                    .addOnCompleteListener(taskBikerId -> {
+                        if (taskBikerId.isSuccessful()) {
+                            DocumentSnapshot document = taskBikerId.getResult();
+                            if (document.exists()) {
+                                String bikerID = (String) document.get("biker_id");
+                                if (bikerID != null) {
+                                    SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPref.edit();
+                                    editor.putString("bikerKey", bikerID);
+                                    editor.commit();
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+
+                                    new AlertDialog.Builder(this)
+                                            .setTitle(getString(R.string.became_biker))
+                                            .setMessage(getString(R.string.became_biker2))
+                                            .setPositiveButton(getString(R.string.ok_string), (dialog, which) -> {
+                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                DocumentReference bikerDRef = db.collection("bikers").document();
+
+                                                Map<String, Object> biker = new HashMap<>();
+                                                biker.put("user_id", auth.getCurrentUser().getUid());
+                                                biker.put("status", "disabled");
+                                                bikerDRef.set(biker)
+                                                        .addOnSuccessListener(documentReference -> {
+                                                            Map<String, Object> biker_id = new HashMap<>();
+                                                            biker_id.put("biker_id", bikerDRef.getId());
+                                                            db.collection("users").document(auth.getCurrentUser().getUid()).update(biker_id).addOnCompleteListener(task1 -> {
+                                                                if (task1.isSuccessful()) {
+                                                                    SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
+                                                                    SharedPreferences.Editor editor = sharedPref.edit();
+                                                                    editor.putString("bikerKey", bikerDRef.getId());
+                                                                    editor.commit();
+
+                                                                    new AlertDialog.Builder(this)
+                                                                            .setTitle(getString(R.string.became_biker))
+                                                                            .setMessage(getString(R.string.welcome_biker))
+                                                                            .setPositiveButton(getString(R.string.ok_string), (dialog1, which1) -> {
+                                                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                                                                dialog.dismiss();
+                                                                                finish();
+                                                                            })
+                                                                            .create()
+                                                                            .show();
+                                                                } else {
+
+                                                                    Toast.makeText(LoginActivity.this, "Insert biker key failed." + task1.getException(),
+                                                                            Toast.LENGTH_SHORT).show();
+                                                                    dialog.dismiss();
+                                                                }
+                                                            });
+                                                        });
+                                            })
+                                            .setNegativeButton(getString(R.string.cancel_string), (dialog, which) -> {
+                                                signOut();
+                                                dialog.dismiss();
+                                            })
+                                            .create().show();
+                                }
+                            } else {
+                                Log.d("BikerID", "No such document");
+                                Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+
+
+                            }
+                        } else {
+                            Log.d("BikerID", "get failed with ", taskBikerId.getException());
+                            Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+
+                        }
+                    });
+
+        }
+
 
     public boolean isValidPassword(final String password) {
 

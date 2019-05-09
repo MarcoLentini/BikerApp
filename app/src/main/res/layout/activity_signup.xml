@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/colorPrimary"
+
     tools:context="com.example.bikerapp.Information.SignupActivity"
    >
     <ScrollView
@@ -22,27 +24,26 @@
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
 
-
         <RelativeLayout
             android:id="@+id/linearLayoutOffer"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/toolbar_profile_width"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-
-            <ImageView
+            <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/user_image1"
-                android:layout_width="match_parent"
-                android:layout_height="258dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dp8"
-                android:layout_marginBottom="30dp"
+                android:layout_width="@dimen/toolbar_profile_width"
+                android:layout_height="@dimen/toolbar_profile_width"
+                android:layout_marginTop="@dimen/activity_padding"
+                android:layout_marginBottom="@dimen/activity_padding"
                 android:scaleType="centerInside"
-                android:src="@drawable/img_biker_1" />
+                android:src="@drawable/img_biker_1"
+                app:civ_border_color="@color/colorPrimaryText"
+                app:civ_border_width="2sp" />
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/background_img_user1"
@@ -51,9 +52,6 @@
                 android:layout_alignBottom="@id/user_image1"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginEnd="3dp"
-                android:layout_marginRight="3dp"
-                android:layout_marginBottom="-12dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/background"
                 app:civ_border_color="@android:color/white"
@@ -62,7 +60,7 @@
                 app:civ_shadow_radius="1" />
 
             <ImageView
-                android:id="@+id/img_plus_user1"
+                android:id="@+id/img_plus1"
                 android:layout_width="43sp"
                 android:layout_height="44sp"
                 android:layout_alignStart="@+id/background_img_user1"
@@ -92,7 +90,7 @@
                 android:id="@+id/user_name_user1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/biker_name"
+                android:hint="@string/username_title"
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -168,15 +166,6 @@
             android:textColor="@color/btn_login_bg"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btn_reset_password1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
-            android:background="@null"
-            android:text="@string/btn_forgot_password"
-            android:textAllCaps="false"
-            android:textColor="@color/btn_login_bg" />
 
         <!-- Link to Login Screen -->
 

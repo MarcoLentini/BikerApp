@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             if (!document.isEmpty()) {
                 for (DocumentSnapshot doc : document) {
 
-                    ReservationModel tmpReservationModel = new ReservationModel((Long) doc.get("rs_id"),
+                    ReservationModel tmpReservationModel = new ReservationModel((Long)doc.get("rs_id"),
                             (String) doc.get("rest_name"),
                             (String) doc.get("rest_address"),
                             (String) doc.get("cust_address"),

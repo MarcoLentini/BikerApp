@@ -57,8 +57,7 @@ public class BikerInformationActivity extends AppCompatActivity {
     private String userEmail;
     private String userPhoneNumber;
 
-    private String userPassword;
-    private ImageView imageProfile;
+     private ImageView imageProfile;
     private Uri uriSelectedImage;
 
     private SharedPreferences sharedPref;
@@ -85,9 +84,9 @@ public class BikerInformationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_biker_information);
+
         String title=getString(R.string.InfoTitle);
         getSupportActionBar().setTitle(title);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -110,14 +109,27 @@ public class BikerInformationActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot doc = task.getResult();
                         if (doc.exists()) {
+                            if(doc.get("image_url")!=null){
                                 userInfo= new UserInformationModel(
                                         (String) doc.get("username"),
                                         (String) doc.get("email"),
-                                        (String) doc.get("phone")
-                                       // Uri.parse((String)doc.get("image_url"))
+                                        (String) doc.get("phone"),
+                                        Uri.parse((String)doc.get("image_url")),
+                                        (String) doc.get("rest_id"),
+                                        (String) doc.get("biker_id")
 
                                 );
+                            }else {
 
+                                userInfo = new UserInformationModel(
+                                        (String) doc.get("username"),
+                                        (String) doc.get("email"),
+                                        (String) doc.get("phone"),
+                                        (String) doc.get("rest_id"),
+                                        (String) doc.get("biker_id")
+
+                                );
+                            }
                                 // Image Profile
 
                             ImageView imageAddButton = findViewById(R.id.background_img);
@@ -205,14 +217,15 @@ public class BikerInformationActivity extends AppCompatActivity {
                                 userPhoneNumber = userInfo.getPhone();
                                 if (!userPhoneNumber.equals(""))
                                     tvUserPhoneNumber.setText(userPhoneNumber);
-         /*  uriSelectedImage = userInfo.getImage();
-           Glide.with(this).load(uriSelectedImage).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.img_profile));
-           try {
-               deleteImage();
-           } catch (IOException e) {
-               e.printStackTrace();
-           }*/
-                            }
+                                if(userInfo.getImage()!=null) {
+                                    uriSelectedImage = userInfo.getImage();
+                                    Glide.with(this).load(uriSelectedImage).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.img_profile));
+                                    try {
+                                        deleteImage();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }            }
                         } else {
                             Log.d("QueryReservation", "No such document");
                         }
@@ -270,14 +283,7 @@ public class BikerInformationActivity extends AppCompatActivity {
                         }
                         break;
 
-                /*    case "user_password":
-                        userPassword = data.getExtras().getString("value");
-                        if (!userPassword.equals("")) {
-                            editor.putString("userPassword", userPassword);
-                            editor.commit();
-                        }
 
-                        break;*/
                 }
             } else if (requestCode == CAMERA_REQUEST) {
                 uploadOnFirebase(file_image);

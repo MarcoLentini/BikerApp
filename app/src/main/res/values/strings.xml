@@ -108,5 +108,7 @@
     <string name="welcome_biker">Welcome among bikers!</string>
     <string name="logout_title">Log out</string>
     <string name="password_failed_updated">Failed to update password!</string>
+    <string name="create_profile_failed">Error in creating your profile.</string>
+    <string name="sign_up">Sign up</string>
 
 </resources>

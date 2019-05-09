@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.bikerapp.MainActivity;
 import com.example.bikerapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -73,6 +74,11 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        String title=getString(R.string.sign_up);
+        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
@@ -83,9 +89,6 @@ public class SignupActivity extends AppCompatActivity {
         inputUser = findViewById(R.id.user_name_user1);
         inputPhone = findViewById(R.id.user_phone_user1);
         progressBar = findViewById(R.id.progressBar1);
-        btnResetPassword = findViewById(R.id.btn_reset_password1);
-
-        btnResetPassword.setOnClickListener(v -> startActivity(new Intent(SignupActivity.this, ResetPasswordActivity.class)));
 
         btnSignIn.setOnClickListener(v -> finish());
 
@@ -150,15 +153,11 @@ public class SignupActivity extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            //TODO: mettere controllo input
                             Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
                                     Toast.LENGTH_SHORT).show();
                         } else {
 
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
-
                             DocumentReference bikerDRef = db.collection("bikers").document();
 
                             Map<String, Object> biker = new HashMap<>();
@@ -180,12 +179,12 @@ public class SignupActivity extends AppCompatActivity {
                                                     SharedPreferences.Editor editor = sharedPref.edit();
                                                     editor.putString("bikerKey", bikerDRef.getId());
                                                     editor.commit();
-                                                    startActivity(new Intent(SignupActivity.this, BikerInformationActivity.class));
+                                                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
                                                     finish();
                                                 })
-                                                .addOnFailureListener(e -> Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(), Toast.LENGTH_SHORT).show());
+                                                .addOnFailureListener(e -> Toast.makeText(SignupActivity.this, getString(R.string.create_profile_failed), Toast.LENGTH_SHORT).show());
                                     })
-                                    .addOnFailureListener(e -> Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(), Toast.LENGTH_SHORT).show());
+                                    .addOnFailureListener(e -> Toast.makeText(SignupActivity.this,  getString(R.string.create_profile_failed), Toast.LENGTH_SHORT).show());
 
 
                         }
@@ -332,7 +331,7 @@ public class SignupActivity extends AppCompatActivity {
     // For Image Profile -- URI
     private File createImageFile() throws IOException {
         // Create an image file name
-        String imageFileName = "ImageProfile";
+        String imageFileName = "UserImage";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = new File(storageDir + File.separator + imageFileName + ".jpg");
 
