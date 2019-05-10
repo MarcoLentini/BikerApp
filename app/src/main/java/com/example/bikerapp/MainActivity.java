@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                             (String) doc.get("rest_id"),
                             (String) doc.get("cust_id"),
                             (String) doc.get("cust_phone"),
-                            (Timestamp) doc.get("upload_time")
+                            (Timestamp) doc.get("delivery_time")
 
 
                     );
