@@ -138,11 +138,11 @@ public class SignupActivity extends AppCompatActivity {
                 return;
             }
 
-      /*      if (user_image==null) {
+            if (user_image==null) {
                 Toast.makeText(getApplicationContext(), "Enter Photo!", Toast.LENGTH_SHORT).show();
                 btnImage.performClick();
                 return;
-            }*/
+            }
             progressBar.setVisibility(View.VISIBLE);
             //create user
             auth.createUserWithEmailAndPassword(email, password)
@@ -170,11 +170,10 @@ public class SignupActivity extends AppCompatActivity {
                                         user.put("email", email);
                                         user.put("phone", phone);
                                         user.put("biker_id",bikerDRef.getId());
-                                    //    uploadOnFirebase(file_image);
-                                      //  user.put("image_url", user_image.toString());
                                         db.collection("users").document(auth.getCurrentUser().getUid())
                                                 .set(user)
                                                 .addOnSuccessListener(documentReference1 -> {
+                                                    uploadOnFirebase(file_image);
                                                     SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
                                                     SharedPreferences.Editor editor = sharedPref.edit();
                                                     editor.putString("bikerKey", bikerDRef.getId());
@@ -242,14 +241,14 @@ public class SignupActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK) {
             if(requestCode == CAMERA_REQUEST)  {
                 user_image = file_image;
-                Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.img_profile));
+                Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.user_image1));
 
 
             }
             if(requestCode == GALLERY_REQUEST){
 
                 user_image = data.getData();
-                Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.img_profile));
+                Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.user_image1));
 
             }
         }
@@ -273,7 +272,12 @@ public class SignupActivity extends AppCompatActivity {
             // Upload succeeded
             Log.d(TAG, "uploadFromUri: getDownloadUri success");
             user_image = downloadUri;
-            Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.img_profile));
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users").document(auth.getCurrentUser().getUid()).update("image_url",user_image.toString()).addOnCompleteListener(task->{
+                if(task.isSuccessful())
+                    Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.img_profile));
+            });
+
             try {
                 deleteImage();
             } catch (IOException e) {
