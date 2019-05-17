@@ -111,4 +111,8 @@
     <string name="create_profile_failed">Error in creating your profile.</string>
     <string name="sign_up">Sign up</string>
 
+    <string name="tracking_enabled_notif">Tracking is currently enabled. Tap to cancel.</string>
+    <string name="location">Location</string>
+    <string name="startLocation">Start Working</string>
+    <string name="stopLocation">Stop Working</string>
 </resources>

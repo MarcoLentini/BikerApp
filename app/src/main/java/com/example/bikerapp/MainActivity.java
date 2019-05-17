@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 import com.example.bikerapp.Information.BikerInformationActivity;
 import com.example.bikerapp.Information.LoginActivity;
+import com.example.bikerapp.Location.LocationActivity;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -82,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
         if(id == android.R.id.home){
             onBackPressed();
             //getSupportFragmentManager().popBackStack();
+        }
+
+        if(id == R.id.location){
+            Intent location = new Intent(this, LocationActivity.class);
+            startActivity(location);
         }
         return super.onOptionsItemSelected(item);
     }

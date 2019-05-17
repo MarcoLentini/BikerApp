@@ -6,4 +6,10 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/location"
+        android:orderInCategory="100"
+        android:title="@string/location"
+        app:showAsAction="never" />
 </menu>

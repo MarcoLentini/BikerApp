@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
 
     <application
         android:allowBackup="true"
@@ -15,10 +18,16 @@
         android:roundIcon="@drawable/biker_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".Location.TrackingService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity android:name=".Location.LocationActivity" ></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_task"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -33,8 +42,7 @@
 
         <activity android:name=".Information.ModifyInfoActivity" />
         <activity android:name=".Information.ChangePwdActivity" />
-        <activity android:name=".Information.BikerInformationActivity"/>
-
+        <activity android:name=".Information.BikerInformationActivity" />
         <activity
             android:name=".Information.SignupActivity"
             android:windowSoftInputMode="adjustResize" />
