@@ -55,11 +55,16 @@ class ReservationListAdapter extends RecyclerView.Adapter<ReservationListAdapter
         holder.tvUserName.setText(reservationModel.getNameUser());
         holder.tvAddrUser.setText(reservationModel.getAddrUser());
         holder.tvUserNotes.setText(reservationModel.getInfoUser());
+        if(position == 0) {
+            if(reservationModel.getStateNew())
+                holder.tvGotIt.setVisibility(View.VISIBLE);
+            else
+                holder.tvGotIt.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
     public int getItemCount() {
-
         return reservationDataSet.size();
     }
 
@@ -73,6 +78,7 @@ class ReservationListAdapter extends RecyclerView.Adapter<ReservationListAdapter
 
     static class ReservationViewHolder extends RecyclerView.ViewHolder {
         TextView tvReservationid;
+        TextView tvGotIt;
         TextView tvNameRest;
         TextView tvAddrRest;
         TextView tvAddrUser;
@@ -83,6 +89,7 @@ class ReservationListAdapter extends RecyclerView.Adapter<ReservationListAdapter
              super(itemView);
 
              tvReservationid = itemView.findViewById(R.id.textViewReservationId);
+             tvGotIt = itemView.findViewById(R.id.textViewGotIt);
              tvNameRest = itemView.findViewById(R.id.textViewRestaurantName);
              tvAddrRest = itemView.findViewById(R.id.textViewRestaurantAddress);
              tvUserName = itemView.findViewById(R.id.textViewUserName);

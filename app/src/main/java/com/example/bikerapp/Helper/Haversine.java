@@ -6,7 +6,7 @@ public class Haversine {
 
     private static Double helpRad(Double v) { return v * Math.PI / 180; }
 
-    public static Double haversine(GeoPoint a, GeoPoint b){
+    public static Double getHaversineDistance(GeoPoint a, GeoPoint b) {
         final int R = 6371;
         Double lat1 = a.getLatitude();
         Double lat2 = b.getLatitude();

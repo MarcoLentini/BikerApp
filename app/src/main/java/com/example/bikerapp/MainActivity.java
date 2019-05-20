@@ -10,8 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.bikerapp.Information.BikerInformationActivity;
 import com.example.bikerapp.Information.LoginActivity;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String bikerDataFile = "BikerDataFile";
     public static ArrayList<ReservationModel> reservationsData;
     private ReservationListAdapter reservationsAdapter;
+    private ConstraintLayout constraintLayout;
     private String NOTIFICATION_CHANNEL_ID = "com.example.bikerapp";
     private int unique_id = 1;
     private NotificationCompat.Builder builder;
@@ -56,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        constraintLayout = findViewById(R.id.main_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.reservation_title);
         setSupportActionBar(toolbar);
@@ -151,10 +155,19 @@ public class MainActivity extends AppCompatActivity {
                             (String) doc.get("rest_id"),
                             (String) doc.get("cust_id"),
                             (String) doc.get("cust_phone"),
-                            (Timestamp) doc.get("delivery_time")
-                    );
+                            (Timestamp) doc.get("delivery_time"),
+                            true);
                     reservationsData.add(tmpReservationModel);
                     reservationsAdapter.notifyDataSetChanged();
+                                        /*
+
+                    View.OnClickListener snackbarListener = v -> {
+                                tmpReservationModel.setStateNew(false);
+                                reservationsAdapter.notifyItemChanged(0);
+                            };
+                            Snackbar.make(constraintLayout, "New order to be delivered!", Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("GOT IT", snackbarListener).show();
+                     */
                     Collections.sort(reservationsData);
 
                     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);

@@ -17,11 +17,12 @@ public class ReservationModel implements Comparable<ReservationModel>, Serializa
     private String userId;
     private String userPhone;
     private Timestamp timestamp;
+    private Boolean stateNew;
    //maybe useful for the future
     private String timeRest;
     private String timeUser;
 
-    public ReservationModel(Long rsId,String nameRest, String addrRest, String addrUser, String infoUser,String nameUser, String restId, String userId, String userPhone, Timestamp timestamp) {
+    public ReservationModel(Long rsId, String nameRest, String addrRest, String addrUser, String infoUser, String nameUser, String restId, String userId, String userPhone, Timestamp timestamp, Boolean stateNew) {
        this.rsId=rsId;
         this.nameRest = nameRest;
         this.addrRest = addrRest;
@@ -32,6 +33,7 @@ public class ReservationModel implements Comparable<ReservationModel>, Serializa
         this.userId = userId;
         this.userPhone=userPhone;
         this.timestamp=timestamp;
+        this.stateNew = stateNew;
     }
 
     public String getNameRest() {
@@ -133,5 +135,13 @@ public class ReservationModel implements Comparable<ReservationModel>, Serializa
     @Override
     public int compareTo(ReservationModel other) {
         return this.timestamp.compareTo(other.getTimestamp());
+    }
+
+    public Boolean getStateNew() {
+        return stateNew;
+    }
+
+    public void setStateNew(Boolean stateNew) {
+        this.stateNew = stateNew;
     }
 }
