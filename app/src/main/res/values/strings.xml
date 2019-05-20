@@ -51,7 +51,7 @@
     <string name="ok_string">Ok</string>
     <string name="perm_denied">Permission Denied</string>
     <string name="title_activity_task">MainActivity</string>
-    <string name="reservation_title">Reservations</string>
+    <string name="reservation_title">Current mission</string>
     <string name="action_settings">Information</string>
 
     <!-- reservation_item.xml-->
@@ -115,4 +115,5 @@
     <string name="location">Location</string>
     <string name="startLocation">Start Working</string>
     <string name="stopLocation">Stop Working</string>
+    <string name="completed_reservations_activity_title">Completed reservations</string>
 </resources>

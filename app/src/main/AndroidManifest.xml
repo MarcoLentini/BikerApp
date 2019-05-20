@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/biker_logo"
@@ -18,12 +17,14 @@
         android:roundIcon="@drawable/biker_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".CompletedReservationsActivity"></activity>
+
         <service
             android:name=".Location.TrackingService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
-        <activity android:name=".Location.LocationActivity" ></activity>
+        <activity android:name=".Location.LocationActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_task"

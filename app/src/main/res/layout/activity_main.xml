@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    android:id="@+id/main_layout"
-    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -26,21 +25,154 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/reservationsRecyclerView"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <!--
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@android:drawable/ic_dialog_email" />
-    -->
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/textViewReservationId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_hashtag"
+                    android:drawableLeft="@drawable/ic_hashtag"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+                <TextView
+                    android:id="@+id/textViewNewReservation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="NEW"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:textColor="@color/colorAccent"
+                    android:gravity="center_vertical|center_horizontal"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imageViewRestaurantLogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_biker_1"
+                    android:contentDescription="Restaurant's image" />
+
+                <TextView
+                    android:id="@+id/textViewRestaurantName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:layout_alignBottom="@+id/imageViewRestaurantLogo"
+                    android:layout_centerHorizontal="true"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/textViewRestaurantAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:drawableStart="@android:drawable/ic_dialog_map"
+                android:drawableLeft="@android:drawable/ic_dialog_map"
+                android:tint="@color/colorPrimary"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+
+            <TextView
+                android:id="@+id/textViewUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:drawableStart="@drawable/ic_account_name"
+                android:drawableLeft="@drawable/ic_account_name"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/textViewUserAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:drawableStart="@android:drawable/ic_dialog_map"
+                android:drawableLeft="@android:drawable/ic_dialog_map"
+                android:tint="@color/colorPrimary"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
+            <TextView
+                android:id="@+id/textViewUserNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:drawableStart="@android:drawable/sym_action_chat"
+                android:drawableLeft="@android:drawable/sym_action_chat"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+
+        </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>
+
+    <!-- <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="horizontal"
+         android:layout_marginTop="8dp"
+         android:gravity="end">
+
+
+         <Button
+             android:id="@+id/buttonResumeReservationFinished"
+             style="@style/Widget.AppCompat.Button.Colored"
+
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_weight="1"
+             android:text="@string/accept_reservation_button"
+             android:textColor="@color/colorSecondaryText"
+             android:theme="@style/PrimaryFlatButton" />
+         <Button
+             android:id="@+id/buttonRemoveReservationFinished"
+
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_weight="1"
+             android:text="@string/refuse_reservation_button"
+             android:theme="@style/PrimaryFlatButton"/>
+     </LinearLayout> -->

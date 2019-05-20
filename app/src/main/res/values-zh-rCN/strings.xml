@@ -99,5 +99,6 @@
     <string name="btn_forgot_password">忘记您的密码 ？</string>
     <string name="btn_link_to_login">已有账户，点击登陆</string>
     <string name="btn_link_to_register">还没有账户？立即注册！</string>
+    <string name="completed_reservations_activity_title">Completed reservations</string>
 
 </resources>

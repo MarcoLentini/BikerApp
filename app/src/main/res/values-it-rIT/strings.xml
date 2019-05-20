@@ -38,5 +38,6 @@
     <string name="image_disappear">L\'immagine selezionata non è più disponibile</string>
     <string name="reservation_title">Reservations</string>
     <string name="action_settings">Information</string>
+    <string name="completed_reservations_activity_title">Completed reservations</string>
 
 </resources>

@@ -6,8 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -15,14 +15,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.bikerapp.Information.BikerInformationActivity;
 import com.example.bikerapp.Information.LoginActivity;
 import com.example.bikerapp.Location.LocationActivity;
@@ -32,11 +33,10 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Map;
 
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 
@@ -46,13 +46,19 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private String bikerKey;
     private static final String bikerDataFile = "BikerDataFile";
-    public static ArrayList<ReservationModel> reservationsData;
-    private ReservationListAdapter reservationsAdapter;
     private ConstraintLayout constraintLayout;
     private String NOTIFICATION_CHANNEL_ID = "com.example.bikerapp";
     private int unique_id = 1;
     private NotificationCompat.Builder builder;
 
+    private TextView tvReservationId;
+    private TextView tvNewReservation;
+    private ImageView ivRestaurantLogo;
+    private TextView tvRestaurantName;
+    private TextView tvRestaurantAddress;
+    private TextView tvUserName;
+    private TextView tvUserAddress;
+    private TextView tvUserNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         constraintLayout = findViewById(R.id.main_layout);
+        tvReservationId = findViewById(R.id.textViewReservationId);
+        tvNewReservation = findViewById(R.id.textViewNewReservation);
+        ivRestaurantLogo = findViewById(R.id.imageViewRestaurantLogo);
+        tvRestaurantName = findViewById(R.id.textViewRestaurantName);
+        tvRestaurantAddress = findViewById(R.id.textViewRestaurantAddress);
+        tvUserName = findViewById(R.id.textViewUserName);
+        tvUserAddress = findViewById(R.id.textViewUserAddress);
+        tvUserNotes = findViewById(R.id.textViewUserNotes);
+        tvRestaurantAddress.setOnClickListener(v -> {
+            startGoogleMaps(tvRestaurantAddress.getText().toString());
+        });
+        tvUserAddress.setOnClickListener(v -> {
+            startGoogleMaps(tvUserAddress.getText().toString());
+        });
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.reservation_title);
         setSupportActionBar(toolbar);
@@ -76,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Get Firestore instance
         db = FirebaseFirestore.getInstance();
+        fillWithData();
 
         createNotificationChannel();
         Intent intent = new Intent(this, MainActivity.class);
@@ -89,15 +111,6 @@ public class MainActivity extends AppCompatActivity {
                 .setVisibility(VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-
-        reservationsData = new ArrayList<>();
-        fillWithData();
-        RecyclerView recyclerView = findViewById(R.id.reservationsRecyclerView);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        reservationsAdapter = new ReservationListAdapter(this, MainActivity.reservationsData);
-        recyclerView.setAdapter(reservationsAdapter);
     }
 
     @Override
@@ -109,6 +122,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
+        if(id == R.id.action_completed_reservations) {
+            Intent completedReservations = new Intent(this, CompletedReservationsActivity.class);
+            Bundle bn = new Bundle();
+            bn.putString("bikerKey", bikerKey);
+            completedReservations.putExtras(bn);
+            startActivity(completedReservations);
+        }
         if (id == R.id.action_settings) {
 
             Intent information = new Intent(this, BikerInformationActivity.class);
@@ -123,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
             Intent location = new Intent(this, LocationActivity.class);
             startActivity(location);
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -136,17 +158,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void startGoogleMaps(String delivery_address) {
+        delivery_address = delivery_address.replace(" ","+");
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + delivery_address);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
+    }
+
     private void fillWithData() {
         db.collection("reservations").whereEqualTo("biker_id", bikerKey).addSnapshotListener((EventListener<QuerySnapshot>) (document, e) -> {
 
             if (e != null)
                 return;
-            reservationsData.clear();
 
-            for(DocumentChange dc : document.getDocumentChanges())
-                if(dc.getType() == DocumentChange.Type.ADDED){
+            // TODO questo andrà cambiato(chiedere ad Alberto come prendere l'unico eventuale ordine)
+            // TODO invece gli ordini già completati vengono messi nella CompletedReservationsActivity dove c'è il recyclerview
+            ReservationModel tmpReservationModel = null;
+            for(DocumentChange dc : document.getDocumentChanges()) {
+                if (dc.getType() == DocumentChange.Type.ADDED) {
                     DocumentSnapshot doc = dc.getDocument();
-                    ReservationModel tmpReservationModel = new ReservationModel((Long)doc.get("rs_id"),
+                    tmpReservationModel = new ReservationModel((Long) doc.get("rs_id"),
                             (String) doc.get("rest_name"),
                             (String) doc.get("rest_address"),
                             (String) doc.get("cust_address"),
@@ -155,31 +187,43 @@ public class MainActivity extends AppCompatActivity {
                             (String) doc.get("rest_id"),
                             (String) doc.get("cust_id"),
                             (String) doc.get("cust_phone"),
-                            (Timestamp) doc.get("delivery_time"),
-                            true);
-                    reservationsData.add(tmpReservationModel);
-                    reservationsAdapter.notifyDataSetChanged();
-                                        /*
-
-                    View.OnClickListener snackbarListener = v -> {
-                                tmpReservationModel.setStateNew(false);
-                                reservationsAdapter.notifyItemChanged(0);
-                            };
-                            Snackbar.make(constraintLayout, "New order to be delivered!", Snackbar.LENGTH_INDEFINITE)
-                                    .setAction("GOT IT", snackbarListener).show();
-                     */
-                    Collections.sort(reservationsData);
+                            (Timestamp) doc.get("delivery_time"));
 
                     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
                     // notificationId is a unique int for each notification that you must define
                     notificationManager.notify(unique_id, builder.build());
                     unique_id++;
                 }
+            }
+
+            if(tmpReservationModel != null) {
+                tvReservationId.setText(String.valueOf(tmpReservationModel.getRsId()));
+                tvRestaurantName.setText(tmpReservationModel.getNameRest());
+                tvRestaurantAddress.setText(tmpReservationModel.getAddrRest());
+                tvUserName.setText(tmpReservationModel.getNameUser());
+                tvUserAddress.setText(tmpReservationModel.getAddrUser());
+                tvUserNotes.setText(tmpReservationModel.getInfoUser());
+                // TODO prendere l'immagine del ristorante e caricarla
+                String restaurantId = tmpReservationModel.getRestId();
+                db.collection("restaurant").document(restaurantId).get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+
+                                DocumentSnapshot documentResult = task.getResult();
+                                if (documentResult.exists()) {
+                                    String restaurantImage = (String) documentResult.get("rest_image");
+                                    Uri tmpUri = Uri.parse(restaurantImage);
+                                    Glide.with(this).load(tmpUri).placeholder(R.drawable.img_biker_1).into(ivRestaurantLogo);
+                                } else {
+                                    Log.d("QueryRestaurants", "No such document");
+                                }
+                            } else {
+                                Log.d("QueryRestaurants", "get failed with ", task.getException());
+                            }
+                        });
+                createNewMissionSnackBar();
+            }
         });
-
-
-
     }
 
     private void createNotificationChannel() {
@@ -206,5 +250,13 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    private void createNewMissionSnackBar() {
+        View.OnClickListener snackBarListener = v -> {
+            tvNewReservation.setVisibility(View.INVISIBLE);
+        };
+        Snackbar.make(constraintLayout, "New order to be delivered!", Snackbar.LENGTH_INDEFINITE)
+                .setAction("GOT IT", snackBarListener).show();
     }
 }
