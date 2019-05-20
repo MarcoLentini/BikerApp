@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<android.support.v7.widget.CardView
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="2dp"
-    app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="#FFFFFF"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,9 +20,8 @@
             android:layout_marginBottom="8dp">
 -->
              <LinearLayout
-
                 android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:layout_marginBottom="8dp">
 
@@ -36,8 +35,7 @@
                      android:drawableLeft="@drawable/ic_hashtag"
                      android:drawablePadding="4dp"
                      android:gravity="center_vertical"
-                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                     android:textColor="@color/colorPrimaryDark" />
+                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
                     <TextView
                     android:id="@+id/textViewRestaurantName"
@@ -49,8 +47,7 @@
                     android:drawableLeft="@drawable/ic_restaurant"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:textColor="@color/colorPrimaryDark" />
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
                     <TextView
                     android:id="@+id/textViewRestaurantAddress"
@@ -58,11 +55,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                         android:padding="4dp"
-                    android:drawableStart="@drawable/ic_account_address"
-                    android:drawableLeft="@drawable/ic_account_address"
-                    android:drawablePadding="4dp"
+                    android:drawableStart="@android:drawable/ic_dialog_map"
+                    android:drawableLeft="@android:drawable/ic_dialog_map"
+                        android:drawableTint="@color/colorPrimary"
+                        android:drawablePadding="4dp"
                     android:gravity="center_vertical"
-                    android:textColor="@color/colorPrimaryDark"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
              </LinearLayout>
@@ -93,11 +90,9 @@
             android:layout_marginBottom="8dp">
 -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:orientation="vertical"
-                android:layout_marginBottom="8dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textViewUserName"
@@ -109,8 +104,7 @@
                     android:drawableLeft="@drawable/ic_account_name"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:textColor="@color/colorPrimaryDark" />
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
                 <TextView
                     android:id="@+id/textViewUserAddress"
@@ -118,11 +112,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="4dp"
-                    android:drawableStart="@drawable/ic_account_address"
-                    android:drawableLeft="@drawable/ic_account_address"
+                    android:drawableStart="@android:drawable/ic_dialog_map"
+                    android:drawableLeft="@android:drawable/ic_dialog_map"
+                    android:drawableTint="@color/colorPrimary"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
-                    android:textColor="@color/colorPrimaryDark"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
                 <TextView
@@ -135,7 +129,6 @@
                     android:drawableLeft="@android:drawable/sym_action_chat"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
-                    android:textColor="@color/colorPrimaryDark"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:maxLines="2"
                     android:ellipsize="end"/>
