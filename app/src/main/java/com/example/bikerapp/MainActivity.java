@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,7 +27,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private String bikerKey;
     private static final String bikerDataFile = "BikerDataFile";
-    public static ArrayList<ReservationModel> ReservationsData;
-    private ReservationsMainFragment reservationsMainFragment;
+    public static ArrayList<ReservationModel> reservationsData;
+    private ReservationListAdapter reservationsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
         bikerKey = sharedPref.getString("bikerKey","");
 
-
-
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null || bikerKey.equals("")) {
@@ -60,10 +58,13 @@ public class MainActivity extends AppCompatActivity {
         //Get Firestore instance
         db = FirebaseFirestore.getInstance();
 
-        ReservationsData = new ArrayList<>();
+        reservationsData = new ArrayList<>();
         fillWithData();
-        reservationsMainFragment = new ReservationsMainFragment();
-        loadFragment(reservationsMainFragment);
+        RecyclerView recyclerView = findViewById(R.id.reservationsRecyclerView);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        reservationsAdapter = new ReservationListAdapter(this, MainActivity.reservationsData);
+        recyclerView.setAdapter(reservationsAdapter);
     }
 
     @Override
@@ -102,20 +103,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loadFragment(Fragment fragment) {
-        // load fragment
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_container_main, fragment);
-        transaction.commit();
-    }
-
     private void fillWithData() {
 
         db.collection("reservations").whereEqualTo("biker_id", bikerKey).addSnapshotListener((EventListener<QuerySnapshot>) (document, e) -> {
 
             if (e != null)
                 return;
-            ReservationsData.clear();
+            reservationsData.clear();
 
             for(DocumentChange dc : document.getDocumentChanges())
                 if(dc.getType() == DocumentChange.Type.ADDED)
@@ -138,13 +132,11 @@ public class MainActivity extends AppCompatActivity {
 
 
                     );
-                    ReservationsData.add(tmpReservationModel);
-
-                    RecyclerView.Adapter reservationsAdapter = reservationsMainFragment.ReservationsAdapter;
+                    reservationsData.add(tmpReservationModel);
                     reservationsAdapter.notifyDataSetChanged();
 
                 }
-                Collections.sort(ReservationsData);
+                Collections.sort(reservationsData);
 
             } else {
                 Log.d("QueryReservation", "No such document");

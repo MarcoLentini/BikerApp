@@ -26,29 +26,44 @@
                 android:orientation="vertical"
                 android:layout_marginBottom="8dp">
 
-                <TextView
-                android:id="@+id/textViewRestaurantName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableStart="@drawable/ic_restaurant"
-                android:drawableLeft="@drawable/ic_restaurant"
-                android:drawablePadding="4dp"
-                android:gravity="center_vertical"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimaryDark" />
+                 <TextView
+                     android:id="@+id/textViewReservationId"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:padding="4dp"
+                     android:layout_weight="1"
+                     android:drawableStart="@drawable/ic_hashtag"
+                     android:drawableLeft="@drawable/ic_hashtag"
+                     android:drawablePadding="4dp"
+                     android:gravity="center_vertical"
+                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                     android:textColor="@color/colorPrimaryDark" />
 
-                <TextView
-                android:id="@+id/textViewRestaurantAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableStart="@drawable/ic_account_address"
-                android:drawableLeft="@drawable/ic_account_address"
-                android:drawablePadding="4dp"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorPrimaryDark"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+                    <TextView
+                    android:id="@+id/textViewRestaurantName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                        android:padding="4dp"
+                    android:drawableStart="@drawable/ic_restaurant"
+                    android:drawableLeft="@drawable/ic_restaurant"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/colorPrimaryDark" />
+
+                    <TextView
+                    android:id="@+id/textViewRestaurantAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                        android:padding="4dp"
+                    android:drawableStart="@drawable/ic_account_address"
+                    android:drawableLeft="@drawable/ic_account_address"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
              </LinearLayout>
 <!--
@@ -85,10 +100,11 @@
                 android:layout_marginBottom="8dp">
 
                 <TextView
-                    android:id="@+id/textViewUserInfo"
+                    android:id="@+id/textViewUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:padding="4dp"
                     android:drawableStart="@drawable/ic_account_name"
                     android:drawableLeft="@drawable/ic_account_name"
                     android:drawablePadding="4dp"
@@ -101,6 +117,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:padding="4dp"
                     android:drawableStart="@drawable/ic_account_address"
                     android:drawableLeft="@drawable/ic_account_address"
                     android:drawablePadding="4dp"
@@ -108,6 +125,20 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
+                <TextView
+                    android:id="@+id/textViewUserNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:drawableStart="@android:drawable/sym_action_chat"
+                    android:drawableLeft="@android:drawable/sym_action_chat"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:maxLines="2"
+                    android:ellipsize="end"/>
             </LinearLayout>
 <!--
             <LinearLayout
@@ -130,7 +161,7 @@
         </LinearLayout>
 
 -->
-        <LinearLayout
+        <!-- <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -156,7 +187,7 @@
                 android:layout_weight="1"
                 android:text="@string/refuse_reservation_button"
                 android:theme="@style/PrimaryFlatButton"/>
-        </LinearLayout>
+        </LinearLayout> -->
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
