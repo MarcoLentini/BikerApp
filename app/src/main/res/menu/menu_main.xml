@@ -7,7 +7,8 @@
         android:orderInCategory="1"
         android:icon="@drawable/ic_baseline_history"
         android:title="Completed reservations"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        app:iconTint="@color/white"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="2"

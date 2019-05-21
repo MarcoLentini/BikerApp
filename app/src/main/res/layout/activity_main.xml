@@ -65,45 +65,48 @@
                     android:gravity="center_vertical|center_horizontal"/>
             </LinearLayout>
 
-            <RelativeLayout
+            <!--<RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"> -->
 
-                <ImageView
-                    android:id="@+id/imageViewRestaurantLogo"
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/img_biker_1"
-                    android:contentDescription="Restaurant's image" />
-
-                <TextView
-                    android:id="@+id/textViewRestaurantName"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="4dp"
-                    android:layout_alignBottom="@+id/imageViewRestaurantLogo"
-                    android:layout_centerHorizontal="true"
-                    android:drawablePadding="4dp"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                    android:textColor="@color/colorSecondaryText"
-                    android:textStyle="bold"/>
-            </RelativeLayout>
+                    android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textViewRestaurantAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="4dp"
-                android:drawableStart="@android:drawable/ic_dialog_map"
-                android:drawableLeft="@android:drawable/ic_dialog_map"
-                android:tint="@color/colorPrimary"
-                android:drawablePadding="4dp"
-                android:gravity="center_vertical"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+                    <TextView
+                        android:id="@+id/textViewRestaurantName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"/>
+
+                    <ImageView
+                        android:id="@+id/imageViewRestaurantLogo"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/img_biker_1"
+                        android:contentDescription="Restaurant's image" />
+
+                    <TextView
+                        android:id="@+id/textViewRestaurantAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_google"
+                        android:drawableLeft="@drawable/ic_google"
+                        android:drawablePadding="4dp"
+                        android:padding="16dp"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
             <TextView
                 android:id="@+id/textViewUserName"
@@ -115,7 +118,7 @@
                 android:drawableLeft="@drawable/ic_account_name"
                 android:drawablePadding="4dp"
                 android:gravity="center_vertical"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_marginTop="16dp"/>
 
             <TextView
@@ -124,12 +127,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="4dp"
-                android:drawableStart="@android:drawable/ic_dialog_map"
-                android:drawableLeft="@android:drawable/ic_dialog_map"
-                android:tint="@color/colorPrimary"
+                android:drawableStart="@drawable/ic_google"
+                android:drawableLeft="@drawable/ic_google"
                 android:drawablePadding="4dp"
                 android:gravity="center_vertical"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
             <TextView
                 android:id="@+id/textViewUserNotes"
@@ -141,7 +143,7 @@
                 android:drawableLeft="@android:drawable/sym_action_chat"
                 android:drawablePadding="4dp"
                 android:gravity="center_vertical"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 android:maxLines="2"
                 android:ellipsize="end"/>
 

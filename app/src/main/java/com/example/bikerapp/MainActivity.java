@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             if (e != null)
                 return;
 
-            // TODO questo andrà cambiato(chiedere ad Alberto come prendere l'unico eventuale ordine)
+            // TODO questo andrà cambiato(chiedere ad Alberto come prendere l'unico ordine)
             // TODO invece gli ordini già completati vengono messi nella CompletedReservationsActivity dove c'è il recyclerview
             ReservationModel tmpReservationModel = null;
             for(DocumentChange dc : document.getDocumentChanges()) {
@@ -203,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
                 tvUserName.setText(tmpReservationModel.getNameUser());
                 tvUserAddress.setText(tmpReservationModel.getAddrUser());
                 tvUserNotes.setText(tmpReservationModel.getInfoUser());
-                // TODO prendere l'immagine del ristorante e caricarla
                 String restaurantId = tmpReservationModel.getRestId();
                 db.collection("restaurant").document(restaurantId).get()
                         .addOnCompleteListener(task -> {
