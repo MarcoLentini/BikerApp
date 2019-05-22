@@ -69,11 +69,10 @@ private static final int PERMISSIONS_REQUEST = 100;
     //Start the TrackerService//
     private void startTrackerService() {
         Intent intent = new Intent(this, TrackingService.class);
-        intent.setAction(TrackingService.ACTION_START_FOREGROUND_SERVICE);
         startService(intent);
 
         //Notify the user that tracking has been enabled//
-        Toast.makeText(this, "GPS tracking enabled", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Start Working", Toast.LENGTH_SHORT).show();
 
         //Close MainActivity//
         finish();
@@ -81,9 +80,10 @@ private static final int PERMISSIONS_REQUEST = 100;
 
     private void stopTrackingService(){
         Intent intent = new Intent(this, TrackingService.class);
-        intent.setAction(TrackingService.ACTION_STOP_FOREGROUND_SERVICE);
-        startService(intent);
-        //Close MainActivity//
+        stopService(intent);
+
+        Toast.makeText(this, "Stop Working", Toast.LENGTH_SHORT).show();
+
         finish();
     }
 }
