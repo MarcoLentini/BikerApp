@@ -54,7 +54,9 @@ public class CompletedReservationsActivity extends AppCompatActivity {
     }
 
     private void fillWithData() {
-        db.collection("reservations").whereEqualTo("biker_id", bikerKey).addSnapshotListener((EventListener<QuerySnapshot>) (document, e) -> {
+        // TODO - secondo me non serve il real time qua
+        // TODO - Passare su firebase ad aggiungere il campo current_order e metterlo a false a tutte le reservation
+        db.collection("reservations").whereEqualTo("biker_id", bikerKey).whereEqualTo("current_order", false).addSnapshotListener((EventListener<QuerySnapshot>) (document, e) -> {
 
             if (e != null)
                 return;

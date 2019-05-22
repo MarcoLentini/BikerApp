@@ -82,7 +82,7 @@ private static final int PERMISSIONS_REQUEST = 100;
     private void stopTrackingService(){
         Intent intent = new Intent(this, TrackingService.class);
         intent.setAction(TrackingService.ACTION_STOP_FOREGROUND_SERVICE);
-        stopService(intent);
+        startService(intent);
         //Close MainActivity//
         finish();
     }

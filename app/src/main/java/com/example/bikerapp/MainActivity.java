@@ -167,13 +167,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fillWithData() {
-        db.collection("reservations").whereEqualTo("biker_id", bikerKey).addSnapshotListener((EventListener<QuerySnapshot>) (document, e) -> {
+        db.collection("reservations").whereEqualTo("biker_id", bikerKey).whereEqualTo("current_order", true).addSnapshotListener((EventListener<QuerySnapshot>) (document, e) -> {
 
+            // TODO - Ogni utente può avere più ordini in corso -> current_order: true, il biker può avere un solo ordine per volta,
+            //      intersecando queste informazioni non possono esistere due ordini in corso che siano dello stesso biker
             if (e != null)
                 return;
 
             // TODO questo andrà cambiato(chiedere ad Alberto come prendere l'unico ordine)
             // TODO invece gli ordini già completati vengono messi nella CompletedReservationsActivity dove c'è il recyclerview
+            //      --> stessta query ma con current_order:false, tutti gli ordini che hanno questo biker id,  ma che sono terminati
             ReservationModel tmpReservationModel = null;
             for(DocumentChange dc : document.getDocumentChanges()) {
                 if (dc.getType() == DocumentChange.Type.ADDED) {
@@ -189,39 +192,51 @@ public class MainActivity extends AppCompatActivity {
                             (String) doc.get("cust_phone"),
                             (Timestamp) doc.get("delivery_time"));
 
-                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-                    // notificationId is a unique int for each notification that you must define
-                    notificationManager.notify(unique_id, builder.build());
-                    unique_id++;
+                    // TODO - IN_PROGRESS è il primo stato in cui deve arrivare la notifica al biker, se riapre l'app dopo che lui ha preso in consegna l'ordine non deve apparire nuovo
+                    //      L'unico dubbio è se deve esserci nuovo tra quando lo prende in mano il biker e quando il ristoratore ha terminato di prepararlo nel caso aggiungere rs_status FINISHED
+                    if(dc.getDocument().get("rs_status").equals("IN_PROGRESS")){
+                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+                        // notificationId is a unique int for each notification that you must define
+                        notificationManager.notify(unique_id, builder.build());
+                        unique_id++;
+                    }
+
+                    if(tmpReservationModel != null) {
+                        tvReservationId.setText(String.valueOf(tmpReservationModel.getRsId()));
+                        tvRestaurantName.setText(tmpReservationModel.getNameRest());
+                        tvRestaurantAddress.setText(tmpReservationModel.getAddrRest());
+                        tvUserName.setText(tmpReservationModel.getNameUser());
+                        tvUserAddress.setText(tmpReservationModel.getAddrUser());
+                        tvUserNotes.setText(tmpReservationModel.getInfoUser());
+                        String restaurantId = tmpReservationModel.getRestId();
+                        db.collection("restaurant").document(restaurantId).get()
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+
+                                        DocumentSnapshot documentResult = task.getResult();
+                                        if (documentResult.exists()) {
+                                            String restaurantImage = (String) documentResult.get("rest_image");
+                                            Uri tmpUri = Uri.parse(restaurantImage);
+                                            Glide.with(this).load(tmpUri).placeholder(R.drawable.img_biker_1).into(ivRestaurantLogo);
+                                        } else {
+                                            Log.d("QueryRestaurants", "No such document");
+                                        }
+                                    } else {
+                                        Log.d("QueryRestaurants", "get failed with ", task.getException());
+                                    }
+                                });
+                        if(dc.getDocument().get("rs_status").equals("IN_PROGRESS")){
+                            createNewMissionSnackBar();
+                        }
+                    }
+
+                }
+                if (dc.getType() == DocumentChange.Type.REMOVED) {
+                    // TODO - L'ordine è stato consegnato
                 }
             }
 
-            if(tmpReservationModel != null) {
-                tvReservationId.setText(String.valueOf(tmpReservationModel.getRsId()));
-                tvRestaurantName.setText(tmpReservationModel.getNameRest());
-                tvRestaurantAddress.setText(tmpReservationModel.getAddrRest());
-                tvUserName.setText(tmpReservationModel.getNameUser());
-                tvUserAddress.setText(tmpReservationModel.getAddrUser());
-                tvUserNotes.setText(tmpReservationModel.getInfoUser());
-                String restaurantId = tmpReservationModel.getRestId();
-                db.collection("restaurant").document(restaurantId).get()
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
 
-                                DocumentSnapshot documentResult = task.getResult();
-                                if (documentResult.exists()) {
-                                    String restaurantImage = (String) documentResult.get("rest_image");
-                                    Uri tmpUri = Uri.parse(restaurantImage);
-                                    Glide.with(this).load(tmpUri).placeholder(R.drawable.img_biker_1).into(ivRestaurantLogo);
-                                } else {
-                                    Log.d("QueryRestaurants", "No such document");
-                                }
-                            } else {
-                                Log.d("QueryRestaurants", "get failed with ", task.getException());
-                            }
-                        });
-                createNewMissionSnackBar();
-            }
         });
     }
 
