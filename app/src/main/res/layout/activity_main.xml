@@ -161,6 +161,15 @@
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                     android:maxLines="2"
                     android:ellipsize="end"/>
+
+                <Button
+                    android:id="@+id/buttonConcludeDelivery"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/conclude_delivery"
+                    android:textColor="@color/colorSecondaryText"
+                    android:theme="@style/PrimaryFlatButton" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

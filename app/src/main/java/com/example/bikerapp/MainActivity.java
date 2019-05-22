@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -14,13 +15,17 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -76,6 +81,35 @@ public class MainActivity extends AppCompatActivity {
         });
         tvUserAddress.setOnClickListener(v -> {
             startGoogleMaps(tvUserAddress.getText().toString());
+        });
+        Button btnConcludeDelivery = findViewById(R.id.buttonConcludeDelivery);
+        btnConcludeDelivery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*final NumberPicker numberPicker = new NumberPicker(getApplicationContext());
+                numberPicker.setMaxValue(9999);
+                numberPicker.setMinValue(0);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                builder.setView(numberPicker);
+                builder.setTitle("Insert the confirmation number");
+                builder.setMessage("Choose a value:");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialogHost.onPositiveButton(numberPicker.getValue());
+                    }
+                });
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener(){
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialogHost.onCancelButton();
+                    }
+                });
+                return builder.create();*/
+            }
         });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
