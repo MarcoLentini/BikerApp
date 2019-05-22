@@ -35,9 +35,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 
 public class MainActivity extends AppCompatActivity {
@@ -177,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
             // TODO questo andrà cambiato(chiedere ad Alberto come prendere l'unico ordine)
             // TODO invece gli ordini già completati vengono messi nella CompletedReservationsActivity dove c'è il recyclerview
             //      --> stessta query ma con current_order:false, tutti gli ordini che hanno questo biker id,  ma che sono terminati
-            ReservationModel tmpReservationModel = null;
+            ReservationModel tmpReservationModel;
             for(DocumentChange dc : document.getDocumentChanges()) {
                 if (dc.getType() == DocumentChange.Type.ADDED) {
                     DocumentSnapshot doc = dc.getDocument();
