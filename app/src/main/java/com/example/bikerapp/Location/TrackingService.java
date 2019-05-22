@@ -32,8 +32,8 @@ import com.google.firebase.firestore.GeoPoint;
 
 public class TrackingService extends Service {
     private static final String TAG = TrackingService.class.getSimpleName();
-    public static final String ACTION_START_FOREGROUND_SERVICE = "ACTION_START_FOREGROUND_SERVICE";
-    public static final String ACTION_STOP_FOREGROUND_SERVICE  = "ACTION_STOP_FOREGROUND_SERVICE";
+    private FusedLocationProviderClient client;
+    private LocationCallback updateFirebase;
 
     private  String bikerKey;
     private static final String bikerDataFile = "BikerDataFile";
@@ -50,26 +50,14 @@ public class TrackingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent != null)
-        {
-            String action = intent.getAction();
+       SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
+       bikerKey = sharedPref.getString("bikerKey","");
+       if(!bikerKey.equals("")) {
+           buildNotification();
+           requestLocationUpdates();
+       }
 
-            switch (action)
-            {
-                case ACTION_START_FOREGROUND_SERVICE:
-                    SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
-                    bikerKey = sharedPref.getString("bikerKey","");
-                    if(!bikerKey.equals("")) {
-                        //buildNotification();
-                        requestLocationUpdates();
-                    }
-                    break;
-                case ACTION_STOP_FOREGROUND_SERVICE:
-                    stopForegroundService();
-                    break;
-            }
-        }
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     //Create the persistent notification//
@@ -91,7 +79,7 @@ public class TrackingService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             startMyOwnForeground();
         else
-            startForeground(1, builder.build());
+            startForeground(1001, builder.build());
     }
 
     protected BroadcastReceiver stopReceiver = new BroadcastReceiver() {
@@ -116,16 +104,14 @@ public class TrackingService extends Service {
         //Get the most accurate location data available//
 
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
+        client = LocationServices.getFusedLocationProviderClient(this);
         int permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
 
         //If the app currently has access to the location permission...//
-
         if (permission == PackageManager.PERMISSION_GRANTED) {
             //...then request location updates//
-
-            client.requestLocationUpdates(request, new LocationCallback() {
+            updateFirebase = new LocationCallback() {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
 
@@ -135,15 +121,24 @@ public class TrackingService extends Service {
                     db.collection("bikers").document(bikerKey)
                             .update("position", new GeoPoint(location.getLatitude(), location.getLongitude()))
                             .addOnCompleteListener(task ->{
-                       if(task.isSuccessful()){
+                                if(task.isSuccessful()){
 
-                       } else {
-                           Toast.makeText(getBaseContext(), "Update position error", Toast.LENGTH_LONG).show();
-                       }
-                    });
+                                } else {
+                                    Toast.makeText(getBaseContext(), "Update position error", Toast.LENGTH_LONG).show();
+                                }
+                            });
                 }
-            }, null);
+            };
+
+            client.requestLocationUpdates(request, updateFirebase, null);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+
+        client.removeLocationUpdates(updateFirebase);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -165,14 +160,6 @@ public class TrackingService extends Service {
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build();
         startForeground(2, notification);
-    }
-
-    private void stopForegroundService()
-    {
-        // Stop foreground service and remove the notification.
-        stopForeground(true);
-        // Stop the foreground service.
-        stopSelf();
     }
 
 }
