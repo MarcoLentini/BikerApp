@@ -21,7 +21,8 @@ public class ReservationModel implements Comparable<ReservationModel>, Serializa
     private String timeRest;
     private String timeUser;
 
-    public ReservationModel(Long rsId, String nameRest, String addrRest, String addrUser, String infoUser, String nameUser, String restId, String userId, String userPhone, Timestamp timestamp) {
+    public ReservationModel(Long rsId, String nameRest, String addrRest, String addrUser, String infoUser,
+                            String nameUser, String restId, String userId, String userPhone, Timestamp timestamp) {
        this.rsId=rsId;
         this.nameRest = nameRest;
         this.addrRest = addrRest;

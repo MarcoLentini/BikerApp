@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,12 +50,14 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private FirebaseFirestore db;
     private String bikerKey;
     private static final String bikerDataFile = "BikerDataFile";
-    private ConstraintLayout constraintLayout;
     private String NOTIFICATION_CHANNEL_ID = "com.example.bikerapp";
     private int unique_id = 1;
     private NotificationCompat.Builder builder;
+    private Long confirmationCode = -1L;
 
-    private TextView tvReservationId;
+    private TextView tvNoDelivery;
+    private LinearLayout reservationLinearLayout;
+    private ConstraintLayout constraintLayout;
     private TextView tvReservationIdValue;
     private TextView tvNewReservation;
     private ImageView ivRestaurantLogo;
@@ -69,8 +72,9 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        tvNoDelivery = findViewById(R.id.textViewNoDelivery);
+        reservationLinearLayout = findViewById(R.id.reservationLinearLayout);
         constraintLayout = findViewById(R.id.main_layout);
-        tvReservationId = findViewById(R.id.textViewReservationId);
         tvReservationIdValue = findViewById(R.id.textViewReservationIdValue);
         tvNewReservation = findViewById(R.id.textViewNewReservation);
         ivRestaurantLogo = findViewById(R.id.imageViewRestaurantLogo);
@@ -205,6 +209,10 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                             (String) doc.get("cust_id"),
                             (String) doc.get("cust_phone"),
                             (Timestamp) doc.get("delivery_time"));
+                    if(doc.get("confirmation_code") != null) {
+                        confirmationCode = (Long) doc.get("confirmation_code");
+                        Log.d("conf", String.valueOf(confirmationCode));
+                    }
 
                     // TODO - IN_PROGRESS è il primo stato in cui deve arrivare la notifica al biker, se riapre l'app dopo che lui ha preso in consegna l'ordine non deve apparire nuovo
                     //      L'unico dubbio è se deve esserci nuovo tra quando lo prende in mano il biker e quando il ristoratore ha terminato di prepararlo nel caso aggiungere rs_status FINISHED
@@ -242,6 +250,8 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                         if(dc.getDocument().get("rs_status").equals("IN_PROGRESS")){
                             createNewMissionSnackBar();
                         }
+                        tvNoDelivery.setVisibility(View.INVISIBLE);
+                        reservationLinearLayout.setVisibility(View.VISIBLE);
                     }
 
                 }
@@ -275,9 +285,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         if (auth.getCurrentUser() == null || bikerKey.equals("")) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
-
         }
-
     }
 
     private void createNewMissionSnackBar() {
@@ -290,12 +298,13 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
     @Override
     public void onSelectedCode(String code) {
-        int userCode = 25; // TODO il codice lo devo prendere da Firebase
         int insertedCode = Integer.parseInt(code);
-        if(insertedCode == userCode) {
+        if(insertedCode == confirmationCode) {
             Snackbar deliverySnackBar = Snackbar.make(constraintLayout,
                     "Delivery successfully completed", Snackbar.LENGTH_LONG);
             deliverySnackBar.show();
+            reservationLinearLayout.setVisibility(View.INVISIBLE);
+            tvNoDelivery.setVisibility(View.VISIBLE);
         } else {
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
             alertBuilder.setTitle("Error!");
