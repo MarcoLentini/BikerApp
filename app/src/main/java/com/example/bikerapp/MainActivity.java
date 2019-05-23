@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_restaurant)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.biker_logo))
-                .setContentTitle("New Order to Delivery")
+                .setContentTitle("New order to delivered")
                 .setContentIntent(pendingIntent)
                 .setVisibility(VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
@@ -291,6 +291,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private void createNewMissionSnackBar() {
         View.OnClickListener snackBarListener = v -> {
             tvNewReservation.setVisibility(View.INVISIBLE);
+
         };
         Snackbar.make(constraintLayout, "New order to be delivered!", Snackbar.LENGTH_INDEFINITE)
                 .setAction("GOT IT", snackBarListener).show();
