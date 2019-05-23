@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.bikerapp.Information.BikerInformationActivity;
@@ -42,7 +43,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
     private FirebaseAuth auth;
     private FirebaseFirestore db;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private NotificationCompat.Builder builder;
 
     private TextView tvReservationId;
+    private TextView tvReservationIdValue;
     private TextView tvNewReservation;
     private ImageView ivRestaurantLogo;
     private TextView tvRestaurantName;
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         constraintLayout = findViewById(R.id.main_layout);
         tvReservationId = findViewById(R.id.textViewReservationId);
+        tvReservationIdValue = findViewById(R.id.textViewReservationIdValue);
         tvNewReservation = findViewById(R.id.textViewNewReservation);
         ivRestaurantLogo = findViewById(R.id.imageViewRestaurantLogo);
         tvRestaurantName = findViewById(R.id.textViewRestaurantName);
@@ -83,32 +86,12 @@ public class MainActivity extends AppCompatActivity {
             startGoogleMaps(tvUserAddress.getText().toString());
         });
         Button btnConcludeDelivery = findViewById(R.id.buttonConcludeDelivery);
+        CodePickerDialog pickerDialog = new CodePickerDialog();
+        //pickerDialog.setValueChangeListener(this);
         btnConcludeDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*final NumberPicker numberPicker = new NumberPicker(getApplicationContext());
-                numberPicker.setMaxValue(9999);
-                numberPicker.setMinValue(0);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                builder.setView(numberPicker);
-                builder.setTitle("Insert the confirmation number");
-                builder.setMessage("Choose a value:");
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialogHost.onPositiveButton(numberPicker.getValue());
-                    }
-                });
-                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener(){
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialogHost.onCancelButton();
-                    }
-                });
-                return builder.create();*/
+                pickerDialog.show(getSupportFragmentManager(), "time picker");
             }
         });
 
@@ -233,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if(tmpReservationModel != null) {
-                        tvReservationId.setText(String.valueOf(tmpReservationModel.getRsId()));
+                        tvReservationIdValue.setText(String.valueOf(tmpReservationModel.getRsId()));
                         tvRestaurantName.setText(tmpReservationModel.getNameRest());
                         tvRestaurantAddress.setText(tmpReservationModel.getAddrRest());
                         tvUserName.setText(tmpReservationModel.getNameUser());
@@ -303,5 +286,28 @@ public class MainActivity extends AppCompatActivity {
         };
         Snackbar.make(constraintLayout, "New order to be delivered!", Snackbar.LENGTH_INDEFINITE)
                 .setAction("GOT IT", snackBarListener).show();
+    }
+
+    @Override
+    public void onSelectedCode(String code) {
+        int userCode = 25; // TODO il codice lo devo prendere da Firebase
+        int insertedCode = Integer.parseInt(code);
+        if(insertedCode == userCode) {
+            Snackbar deliverySnackBar = Snackbar.make(constraintLayout,
+                    "Delivery successfully completed", Snackbar.LENGTH_LONG);
+            deliverySnackBar.show();
+        } else {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+            alertBuilder.setTitle("Error!");
+            alertBuilder.setMessage("The delivery cannot be completed because the code you've inserted is wrong! Try again");
+            alertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            AlertDialog alertDialog = alertBuilder.create();
+            alertDialog.show();
+        }
     }
 }
