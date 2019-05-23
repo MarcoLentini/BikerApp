@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private String bikerKey;
     private static final String bikerDataFile = "BikerDataFile";
     private String NOTIFICATION_CHANNEL_ID = "com.example.bikerapp";
-    private int unique_id = 1;
+    private int unique_id = 1001;
     private NotificationCompat.Builder builder;
     private Long confirmationCode = -1L;
     private boolean biker_status = false;
@@ -229,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                         // notificationId is a unique int for each notification that you must define
                         notificationManager.notify(unique_id, builder.build());
-                        unique_id++;
                     }
 
                     if(tmpReservationModel != null) {
@@ -301,6 +300,8 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         View.OnClickListener snackBarListener = v -> {
             tvNewReservation.setVisibility(View.INVISIBLE);
 
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.cancel(unique_id);
         };
         Snackbar.make(constraintLayout, "New order to be delivered!", Snackbar.LENGTH_INDEFINITE)
                 .setAction("GOT IT", snackBarListener).show();
@@ -319,11 +320,8 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
             alertBuilder.setTitle("Error!");
             alertBuilder.setMessage("The delivery cannot be completed because the code you've inserted is wrong! Try again");
-            alertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+            alertBuilder.setPositiveButton("OK", (dialog, which) -> {
 
-                }
             });
             AlertDialog alertDialog = alertBuilder.create();
             alertDialog.show();
