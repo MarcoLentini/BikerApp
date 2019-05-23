@@ -2,7 +2,9 @@ package com.example.bikerapp.Location;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -13,15 +15,22 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.bikerapp.R;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LocationActivity extends AppCompatActivity {
 
-private static final int PERMISSIONS_REQUEST = 100;
+    private static final int PERMISSIONS_REQUEST = 100;
+    private String bikerKey;
+    private static final String bikerDataFile = "BikerDataFile";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location);
+
+        SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
+        bikerKey = sharedPref.getString("bikerKey","");
 
         Button start = findViewById(R.id.startLocation);
         start.setOnClickListener(v -> {
@@ -71,6 +80,7 @@ private static final int PERMISSIONS_REQUEST = 100;
         Intent intent = new Intent(this, TrackingService.class);
         startService(intent);
 
+        FirebaseFirestore.getInstance().collection("bikers").document(bikerKey).update("status", "enabled");
         //Notify the user that tracking has been enabled//
         Toast.makeText(this, "Start Working", Toast.LENGTH_SHORT).show();
 
@@ -82,6 +92,7 @@ private static final int PERMISSIONS_REQUEST = 100;
         Intent intent = new Intent(this, TrackingService.class);
         stopService(intent);
 
+        FirebaseFirestore.getInstance().collection("bikers").document(bikerKey).update("status", "disabled");
         Toast.makeText(this, "Stop Working", Toast.LENGTH_SHORT).show();
 
         finish();

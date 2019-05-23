@@ -31,22 +31,16 @@ public class CodePickerDialog extends DialogFragment {
         builder.setTitle("CODE REQUESTED");
         builder.setMessage("Ask the user for the CONFIRMATION CODE and insert it to conclude your delivery:");
 
-        builder.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String code = "";
-                for(int i=0; i< DIGITS; i++) {
-                    code += numberPickers[i].getValue();
-                }
-                mCallback.onSelectedCode(code);
+        builder.setPositiveButton("CONFIRM", (dialog, which) -> {
+            String code = "";
+            for(int i=0; i< DIGITS; i++) {
+                code += numberPickers[i].getValue();
             }
+            mCallback.onSelectedCode(code);
         });
 
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        builder.setNegativeButton("CANCEL", (dialog, which) -> {
 
-            }
         });
 
         LinearLayout linearLayout = new LinearLayout(getActivity());
