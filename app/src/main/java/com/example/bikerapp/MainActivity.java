@@ -19,16 +19,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.bikerapp.Information.BikerInformationActivity;
@@ -171,12 +168,10 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(Build.VERSION.SDK_INT > 11) {
             if(biker_status)
                 menu.findItem(R.id.current_status_biker).setIcon(android.R.drawable.button_onoff_indicator_on);
             else
                 menu.findItem(R.id.current_status_biker).setIcon(android.R.drawable.button_onoff_indicator_off);
-        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -339,10 +334,9 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         db.collection("bikers").document(bikerKey).addSnapshotListener((EventListener<DocumentSnapshot>)(documentSnapshot, e) -> {
             if (e != null)
                 return;
+
             String status = (String) documentSnapshot.get("status");
-            Log.d("STATUS_M", "nullo");
             if(status != null) {
-                Log.d("STATUS_M", "non nullo");
                 if (status.equals("enabled"))
                     biker_status = true;
                 else
