@@ -3,21 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_completed_reservations"
+        android:id="@+id/current_status_biker"
         android:orderInCategory="1"
+        android:icon="@android:drawable/button_onoff_indicator_off"
+        android:title="Status"
+        app:showAsAction="always|withText"/>
+    <item
+        android:id="@+id/action_completed_reservations"
+        android:orderInCategory="2"
         android:icon="@drawable/ic_baseline_history"
         android:title="Completed reservations"
         app:showAsAction="ifRoom"
         app:iconTint="@color/white"/>
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/location"
-        android:orderInCategory="3"
+        android:orderInCategory="4"
         android:title="@string/location"
         app:showAsAction="never" />
 </menu>

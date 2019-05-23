@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private int unique_id = 1;
     private NotificationCompat.Builder builder;
     private Long confirmationCode = -1L;
+    private boolean biker_status = false;
 
     private TextView tvNoDelivery;
     private LinearLayout reservationLinearLayout;
@@ -129,6 +130,8 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                 .setVisibility(VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        getAndUpdateBikerStatus();
     }
 
     @Override
@@ -164,6 +167,17 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(Build.VERSION.SDK_INT > 11) {
+            if(biker_status)
+                menu.findItem(R.id.current_status_biker).setIcon(android.R.drawable.button_onoff_indicator_on);
+            else
+                menu.findItem(R.id.current_status_biker).setIcon(android.R.drawable.button_onoff_indicator_off);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -319,5 +333,22 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
             AlertDialog alertDialog = alertBuilder.create();
             alertDialog.show();
         }
+    }
+
+    private void getAndUpdateBikerStatus() {
+        db.collection("bikers").document(bikerKey).addSnapshotListener((EventListener<DocumentSnapshot>)(documentSnapshot, e) -> {
+            if (e != null)
+                return;
+            String status = (String) documentSnapshot.get("status");
+            Log.d("STATUS_M", "nullo");
+            if(status != null) {
+                Log.d("STATUS_M", "non nullo");
+                if (status.equals("enabled"))
+                    biker_status = true;
+                else
+                    biker_status = false;
+                invalidateOptionsMenu();
+            }
+        });
     }
 }
