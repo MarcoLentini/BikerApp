@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.bikerapp.Information.BikerInformationActivity;
@@ -160,6 +161,9 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
         if(id == R.id.location){
             Intent location = new Intent(this, LocationActivity.class);
+            Bundle bn = new Bundle();
+            bn.putBoolean("biker_status", biker_status);
+            location.putExtras(bn);
             startActivity(location);
         }
 
@@ -335,10 +339,17 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
             String status = (String) documentSnapshot.get("status");
             if(status != null) {
-                if (status.equals("enabled"))
+                if (status.equals("enabled")) {
                     biker_status = true;
-                else
+                    //Notify the user that tracking has been enabled//
+                    Toast.makeText(this, "Your are now available." +
+                            " Wait for delivery requests", Toast.LENGTH_LONG).show();
+                }
+                else {
                     biker_status = false;
+                    Toast.makeText(this, "Your state is disabled." +
+                            " You will not receive delivery requests", Toast.LENGTH_LONG).show();
+                }
                 invalidateOptionsMenu();
             }
         });

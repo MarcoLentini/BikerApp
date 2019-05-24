@@ -1,18 +1,23 @@
 package com.example.bikerapp.Location;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
 
 import com.example.bikerapp.R;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,41 +27,70 @@ public class LocationActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST = 100;
     private String bikerKey;
     private static final String bikerDataFile = "BikerDataFile";
-
+    private RelativeLayout statusRelativeLayout;
+    private RelativeLayout relativeLayoutOn;
+    private RelativeLayout relativeLayoutOff;
+    private ConstraintLayout constraintLayout;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location);
 
+        statusRelativeLayout = findViewById(R.id.statusRelativeLayout);
+        relativeLayoutOn = findViewById(R.id.relativeLayoutOn);
+        relativeLayoutOff = findViewById(R.id.relativeLayoutOff);
+        progressBar = findViewById(R.id.progressBarChangeStatus);
+        Switch switchWorkingStatus = findViewById(R.id.switchWorkingStatus);
+        Boolean status = getIntent().getExtras().getBoolean("biker_status");
+        if(status) {
+            switchWorkingStatus.setChecked(true);
+           setAppeareanceOn();
+        }
+        else {
+            switchWorkingStatus.setChecked(false);
+            setAppereanceOff();
+        }
+        getSupportActionBar().setTitle(getString(R.string.working_status));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
         bikerKey = sharedPref.getString("bikerKey","");
 
-        Button start = findViewById(R.id.startLocation);
-        start.setOnClickListener(v -> {
-            //Check whether GPS tracking is enabled//
-            LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-            if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-                Toast.makeText(this, "Please active GPS!", Toast.LENGTH_SHORT).show();
-                finish();
-            }
+        constraintLayout = findViewById(R.id.locationConstraintLayout);
+        switchWorkingStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    //Check whether GPS tracking is enabled//
+                    LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+                    if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                        Snackbar.make(constraintLayout, "Please active GPS!",
+                                Snackbar.LENGTH_LONG).show();
+                        finish();
+                    }
 
-            //Check whether this app has access to the location permission//
-            int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+                    //Check whether this app has access to the location permission//
+                    int permission = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
 
-            //If the location permission has been granted, then start the TrackerService//
-            if (permission == PackageManager.PERMISSION_GRANTED) {
-                startTrackerService();
-            } else {
-                //If the app doesn’t currently have access to the user’s location, then request access//
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        PERMISSIONS_REQUEST);
+                    //If the location permission has been granted, then start the TrackerService//
+                    if (permission == PackageManager.PERMISSION_GRANTED) {
+                        startTrackerService();
+                    } else {
+                        //If the app doesn’t currently have access to the user’s location, then request access//
+                        ActivityCompat.requestPermissions(getParent(),
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                PERMISSIONS_REQUEST);
+                    }
+                    setAppeareanceOn();
+                } else {
+                    stopTrackingService();
+                    setAppereanceOff();
+                }
             }
         });
-
-        Button stop = findViewById(R.id.stopLocation);
-        stop.setOnClickListener(v->stopTrackingService());
     }
 
 
@@ -70,8 +104,9 @@ public class LocationActivity extends AppCompatActivity {
             //...then start the GPS tracking service//
             startTrackerService();
         } else {
-            //If the user denies the permission request, then display a toast with some more information//
-            Toast.makeText(this, "Please enable location services to allow GPS tracking", Toast.LENGTH_SHORT).show();
+            //If the user denies the permission request, then display a snackBar with some more information//
+            Snackbar.make(constraintLayout, "Please enable location services to allow GPS tracking",
+                    Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -81,11 +116,6 @@ public class LocationActivity extends AppCompatActivity {
         startService(intent);
 
         FirebaseFirestore.getInstance().collection("bikers").document(bikerKey).update("status", "enabled");
-        //Notify the user that tracking has been enabled//
-        Toast.makeText(this, "Start Working", Toast.LENGTH_SHORT).show();
-
-        //Close MainActivity//
-        finish();
     }
 
     private void stopTrackingService(){
@@ -93,8 +123,23 @@ public class LocationActivity extends AppCompatActivity {
         stopService(intent);
 
         FirebaseFirestore.getInstance().collection("bikers").document(bikerKey).update("status", "disabled");
-        Toast.makeText(this, "Stop Working", Toast.LENGTH_SHORT).show();
+    }
 
-        finish();
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    private void setAppeareanceOn() {
+        statusRelativeLayout.setBackgroundColor(Color.parseColor("#068DE5"));
+        relativeLayoutOff.setVisibility(View.INVISIBLE);
+        relativeLayoutOn.setVisibility(View.VISIBLE);
+    }
+
+    private void setAppereanceOff() {
+        statusRelativeLayout.setBackgroundColor(Color.parseColor("#9E9E9E"));
+        relativeLayoutOn.setVisibility(View.INVISIBLE);
+        relativeLayoutOff.setVisibility(View.VISIBLE);
     }
 }
