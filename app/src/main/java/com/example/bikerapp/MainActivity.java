@@ -91,12 +91,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         Button btnConcludeDelivery = findViewById(R.id.buttonConcludeDelivery);
         CodePickerDialog pickerDialog = new CodePickerDialog();
         //pickerDialog.setValueChangeListener(this);
-        btnConcludeDelivery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickerDialog.show(getSupportFragmentManager(), "time picker");
-            }
-        });
+        btnConcludeDelivery.setOnClickListener(v -> pickerDialog.show(getSupportFragmentManager(), "time picker"));
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.reservation_title);
@@ -198,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     }
 
     private void fillWithData() {
-        db.collection("reservations").whereEqualTo("biker_id", bikerKey).whereEqualTo("current_order", true).addSnapshotListener((EventListener<QuerySnapshot>) (document, e) -> {
+        db.collection("reservations").whereEqualTo("biker_id", bikerKey).whereEqualTo("is_current_order", true).addSnapshotListener((EventListener<QuerySnapshot>) (document, e) -> {
 
             // TODO - Ogni utente può avere più ordini in corso -> current_order: true, il biker può avere un solo ordine per volta,
             //      intersecando queste informazioni non possono esistere due ordini in corso che siano dello stesso biker
