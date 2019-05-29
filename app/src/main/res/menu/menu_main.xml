@@ -7,7 +7,8 @@
         android:orderInCategory="1"
         android:icon="@android:drawable/button_onoff_indicator_off"
         android:title="Status"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:visible="false"/>
     <item
         android:id="@+id/action_completed_reservations"
         android:orderInCategory="2"
@@ -19,7 +20,8 @@
         android:id="@+id/location"
         android:orderInCategory="3"
         android:title="@string/location"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:enabled="false"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="4"

@@ -107,5 +107,7 @@
     <string name="msg_conn_working">You must have your network connection up in order to make your status visible online, otherwise the app will not working as expected!</string>
     <string name="msg_not_available_working">To stop working you have to set your status to NOT available.</string>
     <string name="msg_remeber_switch_off">When you want to stop working it is important to remember to set your state to NOT available otherwise you will continue to receive delivery requeste and you MUST complete them. So for example when you are doing your last delivery you can already set your status to NOT available and in this way when you complete the current delivery you will not receive any request.</string>
+    <string name="msg_no_delivery">No delivery request at the moment. When you have a new request it will appear here. Remember to keep your connection up in order to be able to receive new requests.</string>
+    <string name="alert_connection_start">CHECK your CONNECTION. Your status cannot be recovered now  but it will be automatically recovered when your connection will be active.</string>
 
 </resources>

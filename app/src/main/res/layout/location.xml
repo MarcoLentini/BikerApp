@@ -31,20 +31,27 @@
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBarChangeStatus"
+    <LinearLayout
+        android:id="@+id/linearLayoutProgressBar"
         android:layout_width="match_parent"
-        android:layout_height="8dp"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:indeterminateOnly="true"
-        app:layout_constraintTop_toBottomOf="@+id/statusRelativeLayout"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/statusRelativeLayout">
+
+        <ProgressBar
+            android:id="@+id/progressBarChangeStatus"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:indeterminateOnly="true"
+            android:visibility="invisible"/>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/relativeLayoutOff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/progressBarChangeStatus"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutProgressBar"
         android:padding="16dp">
 
         <LinearLayout
@@ -72,7 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/progressBarChangeStatus"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutProgressBar"
         android:padding="16dp">
 
         <LinearLayout

@@ -4,7 +4,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -26,19 +25,25 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.bikerapp.Information.BikerInformationActivity;
 import com.example.bikerapp.Information.LoginActivity;
 import com.example.bikerapp.Location.LocationActivity;
+import com.example.bikerapp.Location.TrackingService;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
+
+import javax.annotation.Nullable;
 
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 
@@ -52,7 +57,10 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private int unique_id = 1001;
     private NotificationCompat.Builder builder;
     private Long confirmationCode = -1L;
+    private boolean read_status = false;
     private boolean biker_status = false;
+    private String documentKey;
+    private ListenerRegistration listenerRegistration;
 
     private TextView tvNoDelivery;
     private LinearLayout reservationLinearLayout;
@@ -91,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         Button btnConcludeDelivery = findViewById(R.id.buttonConcludeDelivery);
         CodePickerDialog pickerDialog = new CodePickerDialog();
         //pickerDialog.setValueChangeListener(this);
-        btnConcludeDelivery.setOnClickListener(v -> pickerDialog.show(getSupportFragmentManager(), "time picker"));
+        btnConcludeDelivery.setOnClickListener(v -> pickerDialog.show(getSupportFragmentManager(), "code picker"));
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.reservation_title);
@@ -107,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
             finish();
         }
 
+        setLayoutNoDelivery();
         //Get Firestore instance
         db = FirebaseFirestore.getInstance();
         fillWithData();
@@ -145,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
             startActivity(completedReservations);
         }
         if (id == R.id.action_settings) {
-
             Intent information = new Intent(this, BikerInformationActivity.class);
             startActivity(information);
         }
@@ -167,21 +175,17 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-            if(biker_status)
+        if(read_status) {
+            if(!menu.findItem(R.id.location).isEnabled()) {
+                menu.findItem(R.id.current_status_biker).setVisible(true);
+                menu.findItem(R.id.location).setEnabled(true);
+            }
+            if (biker_status)
                 menu.findItem(R.id.current_status_biker).setIcon(android.R.drawable.button_onoff_indicator_on);
             else
                 menu.findItem(R.id.current_status_biker).setIcon(android.R.drawable.button_onoff_indicator_off);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            getSupportFragmentManager().popBackStack();
-        } else {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            super.onBackPressed();
         }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     private void startGoogleMaps(String delivery_address) {
@@ -195,17 +199,13 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private void fillWithData() {
         db.collection("reservations").whereEqualTo("biker_id", bikerKey).whereEqualTo("is_current_order", true).addSnapshotListener((EventListener<QuerySnapshot>) (document, e) -> {
 
-            // TODO - Ogni utente può avere più ordini in corso -> current_order: true, il biker può avere un solo ordine per volta,
-            //      intersecando queste informazioni non possono esistere due ordini in corso che siano dello stesso biker
             if (e != null)
                 return;
 
-            // TODO questo andrà cambiato(chiedere ad Alberto come prendere l'unico ordine)
-            // TODO invece gli ordini già completati vengono messi nella CompletedReservationsActivity dove c'è il recyclerview
-            //      --> stessta query ma con current_order:false, tutti gli ordini che hanno questo biker id,  ma che sono terminati
             ReservationModel tmpReservationModel;
             for(DocumentChange dc : document.getDocumentChanges()) {
                 if (dc.getType() == DocumentChange.Type.ADDED) {
+                    documentKey = dc.getDocument().getId();
                     DocumentSnapshot doc = dc.getDocument();
                     tmpReservationModel = new ReservationModel((Long) doc.get("rs_id"),
                             (String) doc.get("rest_name"),
@@ -222,8 +222,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                         Log.d("conf", String.valueOf(confirmationCode));
                     }
 
-                    // TODO - IN_PROGRESS è il primo stato in cui deve arrivare la notifica al biker, se riapre l'app dopo che lui ha preso in consegna l'ordine non deve apparire nuovo
-                    //      L'unico dubbio è se deve esserci nuovo tra quando lo prende in mano il biker e quando il ristoratore ha terminato di prepararlo nel caso aggiungere rs_status FINISHED
+                    //Boolean biker_check = (Boolean)dc.getDocument().get("biker_check");
                     if(dc.getDocument().get("rs_status").equals("IN_PROGRESS")){
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                         // notificationId is a unique int for each notification that you must define
@@ -257,17 +256,11 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                         if(dc.getDocument().get("rs_status").equals("IN_PROGRESS")){
                             createNewMissionSnackBar();
                         }
-                        tvNoDelivery.setVisibility(View.INVISIBLE);
-                        reservationLinearLayout.setVisibility(View.VISIBLE);
+                        setLayoutDelivery();
                     }
 
                 }
-                if (dc.getType() == DocumentChange.Type.REMOVED) {
-                    // TODO - L'ordine è stato consegnato
-                }
             }
-
-
         });
     }
 
@@ -297,8 +290,8 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
     private void createNewMissionSnackBar() {
         View.OnClickListener snackBarListener = v -> {
+            db.collection("reservations").document(documentKey).update("biker_check", false);
             tvNewReservation.setVisibility(View.INVISIBLE);
-
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.cancel(unique_id);
         };
@@ -310,43 +303,89 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     public void onSelectedCode(String code) {
         int insertedCode = Integer.parseInt(code);
         if(insertedCode == confirmationCode) {
-            Snackbar deliverySnackBar = Snackbar.make(constraintLayout,
-                    "Delivery successfully completed", Snackbar.LENGTH_LONG);
-            deliverySnackBar.show();
-            reservationLinearLayout.setVisibility(View.INVISIBLE);
-            tvNoDelivery.setVisibility(View.VISIBLE);
+            db.collection("reservations").document(documentKey).update("rs_status", "DELIVERED");
+            db.collection("reservations").document(documentKey).update("is_current_order", false);
+            Snackbar.make(constraintLayout, "Delivery successfully completed",
+                    Snackbar.LENGTH_LONG).show();
+            setLayoutNoDelivery();
         } else {
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
             alertBuilder.setTitle("Error!");
-            alertBuilder.setMessage("The delivery cannot be completed because the code you've inserted is wrong! Try again");
-            alertBuilder.setPositiveButton("OK", (dialog, which) -> {
-
-            });
-            AlertDialog alertDialog = alertBuilder.create();
-            alertDialog.show();
+            alertBuilder.setMessage("The delivery cannot be completed because the code you've inserted is wrong! Try again"); // TODO string.xml
+            alertBuilder.setPositiveButton("OK", (dialog, which) -> {            });
+            alertBuilder.create().show();
         }
     }
 
     private void getAndUpdateBikerStatus() {
-        db.collection("bikers").document(bikerKey).addSnapshotListener((EventListener<DocumentSnapshot>)(documentSnapshot, e) -> {
-            if (e != null)
-                return;
+        db.collection("bikers").document(bikerKey).get(Source.SERVER).addOnCompleteListener(task -> {
 
-            String status = (String) documentSnapshot.get("status");
-            if(status != null) {
-                if (status.equals("enabled")) {
-                    biker_status = true;
-                    //Notify the user that tracking has been enabled//
-                    Toast.makeText(this, "Your are now available." +
-                            " Wait for delivery requests", Toast.LENGTH_LONG).show();
-                }
-                else {
-                    biker_status = false;
-                    Toast.makeText(this, "Your state is disabled." +
-                            " You will not receive delivery requests", Toast.LENGTH_LONG).show();
-                }
-                invalidateOptionsMenu();
+            if(!task.isSuccessful()) {
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+                alertBuilder.setTitle("Connection error!");
+                alertBuilder.setMessage(getString(R.string.alert_connection_start));
+                alertBuilder.setCancelable(false);
+                alertBuilder.setPositiveButton("OK", (dialog, which) -> {
+                    EventListener<DocumentSnapshot> eventListener = new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                            if (e != null)
+                                return;
+                            if(!documentSnapshot.getMetadata().isFromCache()) {
+                                Boolean status = (Boolean) documentSnapshot.get("status");
+                                read_status = true;
+                                updateStatus(status);
+                                checkTrackingService(status);
+                                if (listenerRegistration != null) {
+                                    listenerRegistration.remove();
+                                }
+                            }
+                        }
+                    };
+                    if (listenerRegistration == null ) {
+                        listenerRegistration = db.collection("bikers").document(bikerKey)
+                                .addSnapshotListener(MetadataChanges.INCLUDE, eventListener);
+                    }
+                });
+                alertBuilder.create().show();
+
+            } else {
+                Boolean status = (Boolean) task.getResult().get("status");
+                read_status = true;
+                updateStatus(status);
+                checkTrackingService(status);
             }
         });
+    }
+
+    private void setLayoutDelivery() {
+        tvNoDelivery.setVisibility(View.INVISIBLE);
+        reservationLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void setLayoutNoDelivery() {
+        reservationLinearLayout.setVisibility(View.INVISIBLE);
+        tvNoDelivery.setVisibility(View.VISIBLE);
+    }
+
+    private void updateStatus(Boolean status) {
+        if(status != null) {
+            if (status) {
+                biker_status = true;
+                //Notify the user that tracking has been enabled//
+                // TODO
+            } else {
+                biker_status = false;
+                // TODO
+            }
+            invalidateOptionsMenu();
+        }
+    }
+
+    private void checkTrackingService(boolean status) {
+        if(status) {
+            Intent intent = new Intent(this, TrackingService.class);
+            startService(intent);
+        }
     }
 }

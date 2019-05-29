@@ -12,6 +12,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -59,6 +60,7 @@ public class LocationActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
         bikerKey = sharedPref.getString("bikerKey","");
 
+        LocationActivity la = this;
         constraintLayout = findViewById(R.id.locationConstraintLayout);
         switchWorkingStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -80,7 +82,7 @@ public class LocationActivity extends AppCompatActivity {
                         startTrackerService();
                     } else {
                         //If the app doesn’t currently have access to the user’s location, then request access//
-                        ActivityCompat.requestPermissions(getParent(),
+                        ActivityCompat.requestPermissions(la,
                                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                 PERMISSIONS_REQUEST);
                     }
@@ -112,17 +114,35 @@ public class LocationActivity extends AppCompatActivity {
 
     //Start the TrackerService//
     private void startTrackerService() {
-        Intent intent = new Intent(this, TrackingService.class);
-        startService(intent);
-
-        FirebaseFirestore.getInstance().collection("bikers").document(bikerKey).update("status", "enabled");
+        FirebaseFirestore.getInstance().collection("bikers").document(bikerKey).update("status",true).addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                Intent intent = new Intent(this, TrackingService.class);
+                startService(intent);
+                Snackbar.make(constraintLayout, "You are now AVAILABLE. Wait for delivery requests.",
+                        Snackbar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(constraintLayout, "You are NOT available.",
+                        Snackbar.LENGTH_LONG).show();
+                /*AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+                alertBuilder.setTitle("Impossible to change your status!");
+                alertBuilder.setMessage("Your status cannot be updated now. Check your connection. Your status will be updated as soon as possible and you will be informed"); // TODO string.xml
+                alertBuilder.setPositiveButton("OK", (dialog, which) -> {                });
+                alertBuilder.create().show();*/
+            }
+        });
     }
 
     private void stopTrackingService(){
-        Intent intent = new Intent(this, TrackingService.class);
-        stopService(intent);
-
-        FirebaseFirestore.getInstance().collection("bikers").document(bikerKey).update("status", "disabled");
+        FirebaseFirestore.getInstance().collection("bikers").document(bikerKey).update("status", false).addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                Intent intent = new Intent(this, TrackingService.class);
+                stopService(intent);
+                Snackbar.make(constraintLayout, "Your state is disabled. You will not receive delivery requests.",
+                        Snackbar.LENGTH_LONG).show();
+            } else {
+                // TODO manage task unsuccessfull
+            }
+        });
     }
 
     @Override

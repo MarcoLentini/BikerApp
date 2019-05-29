@@ -43,15 +43,14 @@
                 android:layout_margin="16dp"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="No delivery at the moment. When you have a new request it will appear here..."
+                android:text="@string/msg_no_delivery"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
 
             <LinearLayout
                 android:id="@+id/reservationLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
