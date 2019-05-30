@@ -49,6 +49,8 @@ import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 
 public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
+    private static final int WORKING_STATUS = 1;
+
     private FirebaseAuth auth;
     private FirebaseFirestore db;
     private String bikerKey;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d("VITA", "onCreate(...) chiamato");
         tvNoDelivery = findViewById(R.id.textViewNoDelivery);
         reservationLinearLayout = findViewById(R.id.reservationLinearLayout);
         constraintLayout = findViewById(R.id.main_layout);
@@ -132,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                 .setVisibility(VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
+        // TODO call the following method only if it wasn't already called
         getAndUpdateBikerStatus();
     }
 
@@ -167,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
             Bundle bn = new Bundle();
             bn.putBoolean("biker_status", biker_status);
             location.putExtras(bn);
-            startActivity(location);
+            startActivityForResult(location, WORKING_STATUS);
         }
 
         return super.onOptionsItemSelected(item);
@@ -222,8 +225,8 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                         Log.d("conf", String.valueOf(confirmationCode));
                     }
 
-                    //Boolean biker_check = (Boolean)dc.getDocument().get("biker_check");
-                    if(dc.getDocument().get("rs_status").equals("IN_PROGRESS")){
+                    Boolean biker_check = (Boolean)dc.getDocument().get("biker_check");
+                    if(dc.getDocument().get("rs_status").equals("IN_PROGRESS") && biker_check){
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                         // notificationId is a unique int for each notification that you must define
                         notificationManager.notify(unique_id, builder.build());
@@ -370,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
     private void updateStatus(Boolean status) {
         if(status != null) {
+            tvNoDelivery.setText(R.string.msg_no_delivery);
             if (status) {
                 biker_status = true;
                 //Notify the user that tracking has been enabled//
@@ -386,6 +390,30 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         if(status) {
             Intent intent = new Intent(this, TrackingService.class);
             startService(intent);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("VITA", "onStop(...) chiamato");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("VITA", "onDestroy(...) chiamato");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @android.support.annotation.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK) {
+            if(requestCode == WORKING_STATUS) {
+                Boolean status = data.getExtras().getBoolean("biker_status");
+                updateStatus(status);
+            }
         }
     }
 }

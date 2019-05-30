@@ -12,7 +12,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -20,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 
+import com.example.bikerapp.MainActivity;
 import com.example.bikerapp.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -87,9 +87,11 @@ public class LocationActivity extends AppCompatActivity {
                                 PERMISSIONS_REQUEST);
                     }
                     setAppeareanceOn();
+                    setStatusForActivityResult(true);
                 } else {
                     stopTrackingService();
                     setAppereanceOff();
+                    setStatusForActivityResult(false);
                 }
             }
         });
@@ -161,5 +163,13 @@ public class LocationActivity extends AppCompatActivity {
         statusRelativeLayout.setBackgroundColor(Color.parseColor("#9E9E9E"));
         relativeLayoutOn.setVisibility(View.INVISIBLE);
         relativeLayoutOff.setVisibility(View.VISIBLE);
+    }
+
+    private void setStatusForActivityResult(Boolean status) {
+        Intent retIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Bundle bn = new Bundle();
+        bn.putBoolean("biker_status", status);
+        retIntent.putExtras(bn);
+        setResult(RESULT_OK, retIntent);
     }
 }

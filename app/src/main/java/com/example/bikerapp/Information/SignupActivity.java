@@ -162,7 +162,7 @@ public class SignupActivity extends AppCompatActivity {
 
                             Map<String, Object> biker = new HashMap<>();
                             biker.put("user_id", auth.getCurrentUser().getUid());
-                            biker.put("status", "disabled");
+                            biker.put("status", false);
                             bikerDRef.set(biker)
                                     .addOnSuccessListener(documentReference -> {
                                         Map<String, Object> user = new HashMap<>();

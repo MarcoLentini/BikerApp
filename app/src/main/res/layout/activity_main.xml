@@ -43,7 +43,7 @@
                 android:layout_margin="16dp"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="@string/msg_no_delivery"
+                android:text="@string/msg_waiting_status"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
 
             <LinearLayout
