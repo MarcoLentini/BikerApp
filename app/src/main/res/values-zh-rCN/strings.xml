@@ -110,5 +110,8 @@
     <string name="msg_no_delivery">No delivery request at the moment. When you have a new request it will appear here. Remember to keep your connection up in order to be able to receive new requests.</string>
     <string name="alert_connection_start">CHECK your CONNECTION. Your status cannot be recovered now  but it will be automatically recovered when your connection will be active.</string>
     <string name="msg_waiting_status">Waiting for synchronization...  Remember to keep your connection up!</string>
+    <string name="msg_status_off">Your status is set to NOT available. Turn your status on to start working.</string>
+    <string name="msg_wrong_code">The delivery cannot be completed because the code you\'ve inserted is wrong! Try again</string>
+    <string name="msg_tracking_activated">Tracking system activated</string>
 
 </resources>

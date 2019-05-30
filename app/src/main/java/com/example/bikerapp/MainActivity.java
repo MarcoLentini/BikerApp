@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.bikerapp.Information.BikerInformationActivity;
@@ -101,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         });
         Button btnConcludeDelivery = findViewById(R.id.buttonConcludeDelivery);
         CodePickerDialog pickerDialog = new CodePickerDialog();
-        //pickerDialog.setValueChangeListener(this);
         btnConcludeDelivery.setOnClickListener(v -> pickerDialog.show(getSupportFragmentManager(), "code picker"));
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -295,8 +295,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         View.OnClickListener snackBarListener = v -> {
             db.collection("reservations").document(documentKey).update("biker_check", false);
             tvNewReservation.setVisibility(View.INVISIBLE);
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-            notificationManager.cancel(unique_id);
+            removeNewDeliveryNotification();
         };
         Snackbar.make(constraintLayout, "New order to be delivered!", Snackbar.LENGTH_INDEFINITE)
                 .setAction("GOT IT", snackBarListener).show();
@@ -308,13 +307,14 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         if(insertedCode == confirmationCode) {
             db.collection("reservations").document(documentKey).update("rs_status", "DELIVERED");
             db.collection("reservations").document(documentKey).update("is_current_order", false);
+            removeNewDeliveryNotification();
+            setLayoutNoDelivery();
             Snackbar.make(constraintLayout, "Delivery successfully completed",
                     Snackbar.LENGTH_LONG).show();
-            setLayoutNoDelivery();
         } else {
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
             alertBuilder.setTitle("Error!");
-            alertBuilder.setMessage("The delivery cannot be completed because the code you've inserted is wrong! Try again"); // TODO string.xml
+            alertBuilder.setMessage(R.string.msg_wrong_code);
             alertBuilder.setPositiveButton("OK", (dialog, which) -> {            });
             alertBuilder.create().show();
         }
@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private void getAndUpdateBikerStatus() {
         db.collection("bikers").document(bikerKey).get(Source.SERVER).addOnCompleteListener(task -> {
 
-            if(!task.isSuccessful()) {
+            if(!task.isSuccessful()) { // TODO sostituire alert dialog con un normale progress che gira
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
                 alertBuilder.setTitle("Connection error!");
                 alertBuilder.setMessage(getString(R.string.alert_connection_start));
@@ -336,9 +336,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                                 return;
                             if(!documentSnapshot.getMetadata().isFromCache()) {
                                 Boolean status = (Boolean) documentSnapshot.get("status");
-                                read_status = true;
-                                updateStatus(status);
-                                checkTrackingService(status);
+                                SynchronizeBikerStatus(status);
                                 if (listenerRegistration != null) {
                                     listenerRegistration.remove();
                                 }
@@ -354,9 +352,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
             } else {
                 Boolean status = (Boolean) task.getResult().get("status");
-                read_status = true;
-                updateStatus(status);
-                checkTrackingService(status);
+                SynchronizeBikerStatus(status);
             }
         });
     }
@@ -372,18 +368,16 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     }
 
     private void updateStatus(Boolean status) {
-        if(status != null) {
+        if (status) {
+            biker_status = true;
             tvNoDelivery.setText(R.string.msg_no_delivery);
-            if (status) {
-                biker_status = true;
-                //Notify the user that tracking has been enabled//
-                // TODO
-            } else {
-                biker_status = false;
-                // TODO
-            }
-            invalidateOptionsMenu();
+            Toast.makeText(this, R.string.msg_tracking_activated,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            biker_status = false;
+            tvNoDelivery.setText(R.string.msg_status_off);
         }
+        invalidateOptionsMenu();
     }
 
     private void checkTrackingService(boolean status) {
@@ -391,6 +385,17 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
             Intent intent = new Intent(this, TrackingService.class);
             startService(intent);
         }
+    }
+
+    private void SynchronizeBikerStatus(Boolean status) {
+        read_status = true;
+        updateStatus(status);
+        checkTrackingService(status);
+    }
+
+    private void removeNewDeliveryNotification() {
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.cancel(unique_id);
     }
 
     @Override
@@ -411,8 +416,13 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
         if(resultCode == RESULT_OK) {
             if(requestCode == WORKING_STATUS) {
-                Boolean status = data.getExtras().getBoolean("biker_status");
-                updateStatus(status);
+                if(data != null) {
+                    Bundle bn = data.getExtras();
+                    if (bn != null) {
+                        Boolean status = bn.getBoolean("biker_status");
+                        updateStatus(status);
+                    }
+                }
             }
         }
     }
