@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                 .setVisibility(VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        // TODO call the following method only if it wasn't already called
+        // TODO call the following method only if it wasn't already called - read for Rotation
         getAndUpdateBikerStatus();
     }
 
@@ -375,8 +375,6 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         biker_status = status;
         if (status) {
             tvNoDelivery.setText(R.string.msg_no_delivery);
-            Toast.makeText(this, R.string.msg_tracking_activated,
-                    Toast.LENGTH_LONG).show();
         } else {
             tvNoDelivery.setText(R.string.msg_status_off);
         }

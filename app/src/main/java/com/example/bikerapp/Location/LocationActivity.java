@@ -18,6 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.example.bikerapp.MainActivity;
 import com.example.bikerapp.R;
@@ -39,26 +40,28 @@ public class LocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location);
 
+        SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
+        bikerKey = sharedPref.getString("bikerKey","");
+
+        getSupportActionBar().setTitle(getString(R.string.working_status));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         statusRelativeLayout = findViewById(R.id.statusRelativeLayout);
         relativeLayoutOn = findViewById(R.id.relativeLayoutOn);
         relativeLayoutOff = findViewById(R.id.relativeLayoutOff);
         progressBar = findViewById(R.id.progressBarChangeStatus);
+
         Switch switchWorkingStatus = findViewById(R.id.switchWorkingStatus);
         Boolean status = getIntent().getExtras().getBoolean("biker_status");
         if(status) {
             switchWorkingStatus.setChecked(true);
-           setAppeareanceOn();
+            setAppeareanceOn();
         }
         else {
             switchWorkingStatus.setChecked(false);
             setAppereanceOff();
         }
-        getSupportActionBar().setTitle(getString(R.string.working_status));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
-        bikerKey = sharedPref.getString("bikerKey","");
 
         LocationActivity la = this;
         constraintLayout = findViewById(R.id.locationConstraintLayout);
@@ -122,6 +125,8 @@ public class LocationActivity extends AppCompatActivity {
                 startService(intent);
                 Snackbar.make(constraintLayout, "You are now AVAILABLE. Wait for delivery requests.",
                         Snackbar.LENGTH_LONG).show();
+                //Toast.makeText(this, R.string.msg_tracking_activated,
+                //        Toast.LENGTH_LONG).show();
             } else {
                 Snackbar.make(constraintLayout, "You are NOT available.",
                         Snackbar.LENGTH_LONG).show();
