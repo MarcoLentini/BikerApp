@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private String documentKey;
     private ListenerRegistration listenerRegistration;
 
+    private ProgressBar pbInitialSynchronization;
     private TextView tvNoDelivery;
     private LinearLayout reservationLinearLayout;
     private ConstraintLayout constraintLayout;
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         setContentView(R.layout.activity_main);
 
         Log.d("VITA", "onCreate(...) chiamato");
+        pbInitialSynchronization = findViewById(R.id.progress_bar_initial_synchronization);
         tvNoDelivery = findViewById(R.id.textViewNoDelivery);
         reservationLinearLayout = findViewById(R.id.reservationLinearLayout);
         constraintLayout = findViewById(R.id.main_layout);
@@ -321,9 +324,10 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     }
 
     private void getAndUpdateBikerStatus() {
+        pbInitialSynchronization.setVisibility(View.VISIBLE);
         db.collection("bikers").document(bikerKey).get(Source.SERVER).addOnCompleteListener(task -> {
 
-            if(!task.isSuccessful()) { // TODO sostituire alert dialog con un normale progress che gira
+            if(!task.isSuccessful()) {
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
                 alertBuilder.setTitle("Connection error!");
                 alertBuilder.setMessage(getString(R.string.alert_connection_start));
@@ -368,13 +372,12 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     }
 
     private void updateStatus(Boolean status) {
+        biker_status = status;
         if (status) {
-            biker_status = true;
             tvNoDelivery.setText(R.string.msg_no_delivery);
             Toast.makeText(this, R.string.msg_tracking_activated,
                     Toast.LENGTH_LONG).show();
         } else {
-            biker_status = false;
             tvNoDelivery.setText(R.string.msg_status_off);
         }
         invalidateOptionsMenu();
@@ -388,6 +391,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     }
 
     private void SynchronizeBikerStatus(Boolean status) {
+        pbInitialSynchronization.setVisibility(View.GONE);
         read_status = true;
         updateStatus(status);
         checkTrackingService(status);
