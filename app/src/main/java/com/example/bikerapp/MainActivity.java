@@ -3,10 +3,13 @@ package com.example.bikerapp;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.bikerapp.Helper.MyReceiver;
 import com.example.bikerapp.Information.BikerInformationActivity;
 import com.example.bikerapp.Information.LoginActivity;
 import com.example.bikerapp.Location.LocationActivity;
@@ -79,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private TextView tvUserAddress;
     private TextView tvUserNotes;
 
+    private BroadcastReceiver MyReceiver = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         toolbar.setTitle(R.string.reservation_title);
         setSupportActionBar(toolbar);
 
+        MyReceiver = new MyReceiver(this);
+        broadcastIntent();
+
         SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
         bikerKey = sharedPref.getString("bikerKey","");
 
@@ -140,6 +149,10 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         // TODO call the following method only if it wasn't already called - read for Rotation
         getAndUpdateBikerStatus();
+    }
+
+    public void broadcastIntent() {
+        registerReceiver(MyReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
@@ -288,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     @Override
     protected void onResume() {
         super.onResume();
+        broadcastIntent();
         if (auth.getCurrentUser() == null || bikerKey.equals("")) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
@@ -427,5 +441,11 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(MyReceiver);
     }
 }
