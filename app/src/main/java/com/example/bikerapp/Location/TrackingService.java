@@ -138,7 +138,7 @@ public class TrackingService extends Service {
     public void onDestroy() {
 
         client.removeLocationUpdates(updateFirebase);
-
+        unregisterReceiver(stopReceiver);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

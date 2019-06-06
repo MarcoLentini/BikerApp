@@ -3,30 +3,29 @@ package com.example.bikerapp.Helper;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
+import android.support.v7.app.AppCompatActivity;
 
-import com.example.bikerapp.MainActivity;
 import com.example.bikerapp.R;
 
 public class MyReceiver extends BroadcastReceiver {
-    MainActivity ma; //a reference to activity's context
+    AppCompatActivity myActivity; //a reference to activity's context
 
-    public MyReceiver(MainActivity maContext){
-        ma=maContext;
+    public MyReceiver(AppCompatActivity myActivity){
+        if(myActivity instanceof AppCompatActivity)
+            this.myActivity = myActivity;
     }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         String status = NetworkUtil.getConnectivityStatusString(context);
         if(status.isEmpty()) {
-            status="No Internet Connection";
+            status = "No Internet Connection";
         }
 
         if(status.equals("No internet is available") || status.equals("No Internet Connection")){
-            ma.getSupportActionBar().setTitle("Waiting Network...");
+            myActivity.getSupportActionBar().setTitle("Waiting Network...");
         } else {
-            ma.getSupportActionBar().setTitle(R.string.reservation_title);
+            myActivity.getSupportActionBar().setTitle(R.string.reservation_title);
         }
-
-        Toast.makeText(context, status, Toast.LENGTH_LONG).show();
     }
 }

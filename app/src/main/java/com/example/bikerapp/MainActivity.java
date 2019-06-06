@@ -66,11 +66,17 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private NotificationCompat.Builder builder;
     private Long confirmationCode = -1L;
     private boolean read_status = false;
+    private boolean connection_msg_read = false;
     private boolean biker_status = false;
+    private boolean changing_status = false;
+    private boolean updating_status = false;
+    private boolean listener_activated = false;
     private String documentKey;
     private ListenerRegistration listenerRegistration;
+    private ListenerRegistration bsListenerRegistration;
 
     private ProgressBar pbInitialSynchronization;
+    // private ProgressBar pbChangingStatus; TODO remove
     private TextView tvNoDelivery;
     private LinearLayout reservationLinearLayout;
     private ConstraintLayout constraintLayout;
@@ -90,8 +96,9 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.d("VITA", "onCreate(...) chiamato");
+        //Log.d("VITA", "onCreate(...) chiamato");
         pbInitialSynchronization = findViewById(R.id.progress_bar_initial_synchronization);
+        // pbChangingStatus = findViewById(R.id.progressBarChangingStatus); TODO remove
         tvNoDelivery = findViewById(R.id.textViewNoDelivery);
         reservationLinearLayout = findViewById(R.id.reservationLinearLayout);
         constraintLayout = findViewById(R.id.main_layout);
@@ -118,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         setSupportActionBar(toolbar);
 
         MyReceiver = new MyReceiver(this);
-        broadcastIntent();
+        // broadcastIntent(); c'è già in onResume
 
         SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
         bikerKey = sharedPref.getString("bikerKey","");
@@ -147,8 +154,20 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                 .setVisibility(VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        // TODO call the following method only if it wasn't already called - read for Rotation
-        getAndUpdateBikerStatus();
+        if(savedInstanceState != null)
+            connection_msg_read = savedInstanceState.getBoolean("connection_msg_read");
+        if(savedInstanceState == null || !savedInstanceState.getBoolean("read_status")) {
+            getAndUpdateBikerStatus();
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState.getBoolean("read_status")) {
+            SynchronizeBikerStatus(savedInstanceState.getBoolean("biker_status"));
+            Log.d("VITA", "onRestoreInstanceState(...) chiamato e mette biker_status:" + String.valueOf(savedInstanceState.getBoolean("biker_status")));
+        }
     }
 
     public void broadcastIntent() {
@@ -182,9 +201,12 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         }
 
         if(id == R.id.location){
+            // listenForBikerStatus(); TODO remove
             Intent location = new Intent(this, LocationActivity.class);
             Bundle bn = new Bundle();
             bn.putBoolean("biker_status", biker_status);
+            bn.putBoolean("changing_status", changing_status);
+            bn.putBoolean("updating_status", updating_status);
             location.putExtras(bn);
             startActivityForResult(location, WORKING_STATUS);
         }
@@ -238,11 +260,10 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                             (Timestamp) doc.get("delivery_time"));
                     if(doc.get("confirmation_code") != null) {
                         confirmationCode = (Long) doc.get("confirmation_code");
-                        Log.d("conf", String.valueOf(confirmationCode));
                     }
 
-                    Boolean biker_check = (Boolean)dc.getDocument().get("biker_check");
-                    if(dc.getDocument().get("rs_status").equals("IN_PROGRESS") && biker_check){
+                    // Boolean biker_check = (Boolean)dc.getDocument().get("biker_check"); TODO rimetterelo
+                    if(dc.getDocument().get("rs_status").equals("IN_PROGRESS") /*&& biker_check*/){
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                         // notificationId is a unique int for each notification that you must define
                         notificationManager.notify(unique_id, builder.build());
@@ -342,37 +363,92 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         db.collection("bikers").document(bikerKey).get(Source.SERVER).addOnCompleteListener(task -> {
 
             if(!task.isSuccessful()) {
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-                alertBuilder.setTitle("Connection error!");
-                alertBuilder.setMessage(getString(R.string.alert_connection_start));
-                alertBuilder.setCancelable(false);
-                alertBuilder.setPositiveButton("OK", (dialog, which) -> {
-                    EventListener<DocumentSnapshot> eventListener = new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                            if (e != null)
-                                return;
-                            if(!documentSnapshot.getMetadata().isFromCache()) {
-                                Boolean status = (Boolean) documentSnapshot.get("status");
-                                SynchronizeBikerStatus(status);
-                                if (listenerRegistration != null) {
-                                    listenerRegistration.remove();
-                                }
+                showConnectionErrorDialog();
+                EventListener<DocumentSnapshot> eventListener = new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if (e != null)
+                            return;
+                        if(!documentSnapshot.getMetadata().isFromCache()) {
+                            Boolean status = (Boolean) documentSnapshot.get("status");
+                            SynchronizeBikerStatus(status);
+                            changing_status = false;
+                            if (listenerRegistration != null) {
+                                listenerRegistration.remove();
                             }
+                            Log.d("VITA", "sincronizzazione iniziale effettuata");
                         }
-                    };
-                    if (listenerRegistration == null ) {
-                        listenerRegistration = db.collection("bikers").document(bikerKey)
-                                .addSnapshotListener(MetadataChanges.INCLUDE, eventListener);
                     }
-                });
-                alertBuilder.create().show();
-
+                };
+                if (listenerRegistration == null ) {
+                    listenerRegistration = db.collection("bikers").document(bikerKey)
+                            .addSnapshotListener(MetadataChanges.INCLUDE, eventListener);
+                    // MetadataChanges.INCLUDE: you will receive another snapshot with isFomCache()
+                    // equal to false once the client has received up-to-date data from the backend
+                }
             } else {
-                Boolean status = (Boolean) task.getResult().get("status");
-                SynchronizeBikerStatus(status);
+                if(task.getResult() != null) {
+                    Boolean status = (Boolean) task.getResult().get("status");
+                    SynchronizeBikerStatus(status);
+                }
             }
         });
+    }
+
+    private void showConnectionErrorDialog() {
+        if(!connection_msg_read) {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+            alertBuilder.setTitle("Connection error!");
+            alertBuilder.setMessage(getString(R.string.alert_connection_start));
+            alertBuilder.setCancelable(false);
+            alertBuilder.setPositiveButton("OK", (dialog, which) -> {
+                connection_msg_read = true;
+            });
+            alertBuilder.create().show();
+        }
+    }
+
+    private void listenForBikerStatus() {
+        EventListener<DocumentSnapshot> eventListener = new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (e != null)
+                    return;
+                if(!documentSnapshot.getMetadata().isFromCache()) {
+                    Boolean status = (Boolean) documentSnapshot.get("status");
+                    SynchronizeBikerStatus(status);
+                    changing_status = false;
+                    if (bsListenerRegistration != null) {
+                        bsListenerRegistration.remove();
+                        bsListenerRegistration = null;
+                        Log.d("VITA", "bsListenerRegistration ha terminato il suo compito");
+                    }
+                }
+            }
+        };
+        if (bsListenerRegistration == null ) {
+            bsListenerRegistration = db.collection("bikers").document(bikerKey)
+                    .addSnapshotListener(MetadataChanges.INCLUDE, eventListener);
+            // MetadataChanges.INCLUDE: you will receive another snapshot with isFomCache()
+            // equal to false once the client has received up-to-date data from the backend
+        }
+
+
+        /*if(!listener_activated) {
+            db.collection("bikers").document(bikerKey).addSnapshotListener((EventListener<DocumentSnapshot>) (document, e) -> {
+                if (e != null)
+                    return;
+
+                if(!document.getMetadata().isFromCache()) {
+                    Log.d("VITA", "listenForBikerStatus(...) isFromCache():" + String.valueOf(document.getMetadata().isFromCache()));
+                    Boolean status = (Boolean) document.get("status");
+                    updateStatus(status);
+                    changing_status = false;
+                    // pbChangingStatus.setVisibility(View.GONE); TODO remove
+                }
+            });
+            listener_activated = true;
+        }*/
     }
 
     private void setLayoutDelivery() {
@@ -417,13 +493,13 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("VITA", "onStop(...) chiamato");
+        //Log.d("VITA", "onStop(...) chiamato");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("VITA", "onDestroy(...) chiamato");
+        //Log.d("VITA", "onDestroy(...) chiamato");
     }
 
     @Override
@@ -436,11 +512,28 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                     Bundle bn = data.getExtras();
                     if (bn != null) {
                         Boolean status = bn.getBoolean("biker_status");
-                        updateStatus(status);
+                        changing_status = bn.getBoolean("changing_status");
+                        updating_status = bn.getBoolean("updating_status");
+                        Log.d("VITA", "onActivityResult(...) (b_s)(c_s)(u_s): " +String.valueOf(status) + String.valueOf(changing_status) + String.valueOf(updating_status));
+                        SynchronizeBikerStatus(status);
+                        if(changing_status) {
+                            listenForBikerStatus();
+                        }
+                        //if(changing_status) TODO remove
+                            //pbChangingStatus.setVisibility(View.VISIBLE);
                     }
                 }
             }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //Log.d("VITA", String.valueOf(read_status));
+        outState.putBoolean("connection_msg_read", connection_msg_read);
+        outState.putBoolean("read_status", read_status);
+        outState.putBoolean("biker_status", biker_status);
     }
 
     @Override

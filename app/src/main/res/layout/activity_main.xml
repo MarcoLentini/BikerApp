@@ -41,9 +41,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:gravity="center"
+                android:layout_centerHorizontal="true"
                 android:text="@string/msg_waiting_status"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"/>
 
             <ProgressBar
                 android:id="@+id/progress_bar_initial_synchronization"
@@ -58,6 +58,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <!-- <ProgressBar
+                    android:id="@+id/progressBarChangingStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-4dp"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:indeterminateOnly="true"
+                    android:visibility="invisible"/> -->
 
                 <RelativeLayout
                     android:layout_width="match_parent"
