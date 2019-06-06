@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                     }
 
                     Boolean biker_check = (Boolean)dc.getDocument().get("biker_check");
-                    if(dc.getDocument().get("rs_status").equals("IN_PROGRESS") /*&& biker_check*/){
+                    if(dc.getDocument().get("rs_status").equals("IN_PROGRESS") && biker_check){
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                         // notificationId is a unique int for each notification that you must define
                         notificationManager.notify(unique_id, builder.build());
