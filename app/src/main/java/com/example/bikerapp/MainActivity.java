@@ -289,6 +289,9 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                         // notificationId is a unique int for each notification that you must define
                         notificationManager.notify(unique_id, builder.build());
+                        createNewMissionSnackBar();
+                    } else {
+                        tvNewReservation.setVisibility(View.INVISIBLE);
                     }
                     setLayoutDelivery();
                 }
