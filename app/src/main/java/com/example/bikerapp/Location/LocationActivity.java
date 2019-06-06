@@ -147,7 +147,7 @@ public class LocationActivity extends AppCompatActivity {
                 setStatusForActivityResult(false);
                 hideProgressBar();
                 setLayoutOn();
-                Toast.makeText(getApplicationContext(), "Status ON.\nWait for delivery requests.",
+                Toast.makeText(getApplicationContext(), getString(R.string.toast_status_on),
                         Toast.LENGTH_LONG).show();
             }
         });
@@ -163,7 +163,7 @@ public class LocationActivity extends AppCompatActivity {
                 setStatusForActivityResult(false);
                 hideProgressBar();
                 setLayoutOff();
-                Toast.makeText(getApplicationContext(), "Status OFF.\nYou will not receive new delivery requests.",
+                Toast.makeText(getApplicationContext(), getString(R.string.toast_status_off),
                         Toast.LENGTH_LONG).show();
             }
         });

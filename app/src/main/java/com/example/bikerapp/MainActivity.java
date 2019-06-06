@@ -19,6 +19,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
     private ProgressBar pbInitialSynchronization;
     // private ProgressBar pbChangingStatus; TODO remove
+    private CardView cvNoDelivery;
     private TextView tvNoDelivery;
     private LinearLayout reservationLinearLayout;
     private ConstraintLayout constraintLayout;
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         //Log.d("VITA", "onCreate(...) chiamato");
         pbInitialSynchronization = findViewById(R.id.progress_bar_initial_synchronization);
         // pbChangingStatus = findViewById(R.id.progressBarChangingStatus); TODO remove
+        cvNoDelivery = findViewById(R.id.cardViewNoDelivery);
         tvNoDelivery = findViewById(R.id.textViewNoDelivery);
         reservationLinearLayout = findViewById(R.id.reservationLinearLayout);
         constraintLayout = findViewById(R.id.main_layout);
@@ -262,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                         confirmationCode = (Long) doc.get("confirmation_code");
                     }
 
-                    // Boolean biker_check = (Boolean)dc.getDocument().get("biker_check"); TODO rimetterelo
+                    Boolean biker_check = (Boolean)dc.getDocument().get("biker_check");
                     if(dc.getDocument().get("rs_status").equals("IN_PROGRESS") /*&& biker_check*/){
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                         // notificationId is a unique int for each notification that you must define
@@ -452,13 +455,13 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     }
 
     private void setLayoutDelivery() {
-        tvNoDelivery.setVisibility(View.INVISIBLE);
+        cvNoDelivery.setVisibility(View.INVISIBLE);
         reservationLinearLayout.setVisibility(View.VISIBLE);
     }
 
     private void setLayoutNoDelivery() {
         reservationLinearLayout.setVisibility(View.INVISIBLE);
-        tvNoDelivery.setVisibility(View.VISIBLE);
+        cvNoDelivery.setVisibility(View.VISIBLE);
     }
 
     private void updateStatus(Boolean status) {

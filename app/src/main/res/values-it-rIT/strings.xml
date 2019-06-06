@@ -53,5 +53,7 @@
     <string name="msg_wrong_code">The delivery cannot be completed because the code you\'ve inserted is wrong! Try again</string>
     <string name="msg_tracking_activated">Tracking system activated</string>
     <string name="status_actually_changed">You will be informed when your status has actually changed.</string>
+    <string name="toast_status_on">Status ON. Wait for delivery requests.</string>
+    <string name="toast_status_off">Status OFF. You will not receive new delivery requests.</string>
 
 </resources>
