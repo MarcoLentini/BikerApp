@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
@@ -158,7 +157,7 @@ public class LocationActivity extends AppCompatActivity {
             if(task.isSuccessful()) {
                 Intent intent = new Intent(this, TrackingService.class);
                 stopService(intent);
-                biker_status = false;Log.d("LOCACT", "stopTrackingService() success:" + String.valueOf(biker_status));
+                biker_status = false;
                 changing_status = false;
                 setStatusForActivityResult(false);
                 hideProgressBar();
@@ -258,7 +257,6 @@ public class LocationActivity extends AppCompatActivity {
                 if(!documentSnapshot.getMetadata().isFromCache()) {
                     hideProgressBar();
                     Boolean status = (Boolean) documentSnapshot.get("status");
-                    Log.d("LOCACT", "listenForStatusChanged()" + String.valueOf(status));
                     if(status)
                         setLayoutOn();
                     else
@@ -267,7 +265,7 @@ public class LocationActivity extends AppCompatActivity {
                 }
             }
         };
-        if (bsListenerRegistration == null ) {Log.d("LOCACT", "listenForStatusChanged() invoked");
+        if (bsListenerRegistration == null ) {
             bsListenerRegistration = FirebaseFirestore.getInstance().collection("bikers").document(bikerKey)
                     .addSnapshotListener(MetadataChanges.INCLUDE, eventListener);
             // MetadataChanges.INCLUDE: you will receive another snapshot with isFomCache()

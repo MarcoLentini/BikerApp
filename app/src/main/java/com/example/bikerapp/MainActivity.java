@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                                         if (documentResult.exists()) {
                                             String restaurantImage = (String) documentResult.get("rest_image");
                                             Uri tmpUri = Uri.parse(restaurantImage);
-                                            Glide.with(this).load(tmpUri).placeholder(R.drawable.img_biker_1).into(ivRestaurantLogo);
+                                            Glide.with(getApplicationContext()).load(tmpUri).placeholder(R.drawable.img_biker_1).into(ivRestaurantLogo);
                                         } else {
                                             Log.d("QueryRestaurants", "No such document");
                                         }
@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
     private void createNewMissionSnackBar() {
         View.OnClickListener snackBarListener = v -> {
-            db.collection("reservations").document(documentKey).update("biker_check", false);
+            db.collection("reservations").document(documentKey).update("biker_check", true);
             tvNewReservation.setVisibility(View.INVISIBLE);
             removeNewDeliveryNotification();
         };
