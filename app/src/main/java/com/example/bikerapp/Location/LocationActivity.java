@@ -115,7 +115,7 @@ public class LocationActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) { // TODO chiedere ad Alberto se gli serve questa callback
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
         //If the permission has been granted...//
         if (requestCode == PERMISSIONS_REQUEST && grantResults.length == 1
@@ -158,7 +158,7 @@ public class LocationActivity extends AppCompatActivity {
             if(task.isSuccessful()) {
                 Intent intent = new Intent(this, TrackingService.class);
                 stopService(intent);
-                biker_status = false;
+                biker_status = false;Log.d("LOCACT", "stopTrackingService() success:" + String.valueOf(biker_status));
                 changing_status = false;
                 setStatusForActivityResult(false);
                 hideProgressBar();
@@ -257,9 +257,9 @@ public class LocationActivity extends AppCompatActivity {
                     return;
                 if(!documentSnapshot.getMetadata().isFromCache()) {
                     hideProgressBar();
-                    //Boolean status = (Boolean) documentSnapshot.get("status");
-                    Log.d("LOCACT", "listenForStatusChanged()");
-                    if(biker_status)
+                    Boolean status = (Boolean) documentSnapshot.get("status");
+                    Log.d("LOCACT", "listenForStatusChanged()" + String.valueOf(status));
+                    if(status)
                         setLayoutOn();
                     else
                         setLayoutOff();
@@ -267,7 +267,7 @@ public class LocationActivity extends AppCompatActivity {
                 }
             }
         };
-        if (bsListenerRegistration == null ) {
+        if (bsListenerRegistration == null ) {Log.d("LOCACT", "listenForStatusChanged() invoked");
             bsListenerRegistration = FirebaseFirestore.getInstance().collection("bikers").document(bikerKey)
                     .addSnapshotListener(MetadataChanges.INCLUDE, eventListener);
             // MetadataChanges.INCLUDE: you will receive another snapshot with isFomCache()

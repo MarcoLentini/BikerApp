@@ -204,14 +204,11 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         }
 
         if(id == R.id.location){
-            // listenForBikerStatus(); TODO remove
-            Intent location = new Intent(this, LocationActivity.class);
-            Bundle bn = new Bundle();
-            bn.putBoolean("biker_status", biker_status);
-            bn.putBoolean("changing_status", changing_status);
-            bn.putBoolean("updating_status", updating_status);
-            location.putExtras(bn);
-            startActivityForResult(location, WORKING_STATUS);
+            startLocationActivity();
+        }
+
+        if(id == R.id.current_status_biker) {
+            startLocationActivity();
         }
 
         return super.onOptionsItemSelected(item);
@@ -486,6 +483,16 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         read_status = true;
         updateStatus(status);
         checkTrackingService(status);
+    }
+
+    private void startLocationActivity() {
+        Intent location = new Intent(this, LocationActivity.class);
+        Bundle bn = new Bundle();
+        bn.putBoolean("biker_status", biker_status);
+        bn.putBoolean("changing_status", changing_status);
+        bn.putBoolean("updating_status", updating_status);
+        location.putExtras(bn);
+        startActivityForResult(location, WORKING_STATUS);
     }
 
     private void removeNewDeliveryNotification() {
