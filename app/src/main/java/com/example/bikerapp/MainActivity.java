@@ -243,12 +243,11 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
             if (e != null)
                 return;
 
-            ReservationModel tmpReservationModel;
             for(DocumentChange dc : document.getDocumentChanges()) {
                 if (dc.getType() == DocumentChange.Type.ADDED) {
                     documentKey = dc.getDocument().getId();
                     DocumentSnapshot doc = dc.getDocument();
-                    tmpReservationModel = new ReservationModel((Long) doc.get("rs_id"),
+                    ReservationModel tmpReservationModel = new ReservationModel((Long) doc.get("rs_id"),
                             (String) doc.get("rest_name"),
                             (String) doc.get("rest_address"),
                             (String) doc.get("cust_address"),
@@ -262,43 +261,36 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                         confirmationCode = (Long) doc.get("confirmation_code");
                     }
 
+                    tvReservationIdValue.setText(String.valueOf(tmpReservationModel.getRsId()));
+                    tvRestaurantName.setText(tmpReservationModel.getNameRest());
+                    tvRestaurantAddress.setText(tmpReservationModel.getAddrRest());
+                    tvUserName.setText(tmpReservationModel.getNameUser());
+                    tvUserAddress.setText(tmpReservationModel.getAddrUser());
+                    tvUserNotes.setText(tmpReservationModel.getInfoUser());
+                    String restaurantId = tmpReservationModel.getRestId();
+                    db.collection("restaurant").document(restaurantId).get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+
+                                    DocumentSnapshot documentResult = task.getResult();
+                                    if (documentResult.exists()) {
+                                        String restaurantImage = (String) documentResult.get("rest_image");
+                                        Uri tmpUri = Uri.parse(restaurantImage);
+                                        Glide.with(getApplicationContext()).load(tmpUri).placeholder(R.drawable.img_biker_1).into(ivRestaurantLogo);
+                                    } else {
+                                        Log.d("QueryRestaurants", "No such document");
+                                    }
+                                } else {
+                                    Log.d("QueryRestaurants", "get failed with ", task.getException());
+                                }
+                            });
                     Boolean biker_check = (Boolean)dc.getDocument().get("biker_check");
                     if(dc.getDocument().get("rs_status").equals("IN_PROGRESS") && !biker_check){
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                         // notificationId is a unique int for each notification that you must define
                         notificationManager.notify(unique_id, builder.build());
                     }
-
-                    if(tmpReservationModel != null) {
-                        tvReservationIdValue.setText(String.valueOf(tmpReservationModel.getRsId()));
-                        tvRestaurantName.setText(tmpReservationModel.getNameRest());
-                        tvRestaurantAddress.setText(tmpReservationModel.getAddrRest());
-                        tvUserName.setText(tmpReservationModel.getNameUser());
-                        tvUserAddress.setText(tmpReservationModel.getAddrUser());
-                        tvUserNotes.setText(tmpReservationModel.getInfoUser());
-                        String restaurantId = tmpReservationModel.getRestId();
-                        db.collection("restaurant").document(restaurantId).get()
-                                .addOnCompleteListener(task -> {
-                                    if (task.isSuccessful()) {
-
-                                        DocumentSnapshot documentResult = task.getResult();
-                                        if (documentResult.exists()) {
-                                            String restaurantImage = (String) documentResult.get("rest_image");
-                                            Uri tmpUri = Uri.parse(restaurantImage);
-                                            Glide.with(getApplicationContext()).load(tmpUri).placeholder(R.drawable.img_biker_1).into(ivRestaurantLogo);
-                                        } else {
-                                            Log.d("QueryRestaurants", "No such document");
-                                        }
-                                    } else {
-                                        Log.d("QueryRestaurants", "get failed with ", task.getException());
-                                    }
-                                });
-                        if(dc.getDocument().get("rs_status").equals("IN_PROGRESS")){
-                            createNewMissionSnackBar();
-                        }
-                        setLayoutDelivery();
-                    }
-
+                    setLayoutDelivery();
                 }
             }
         });
