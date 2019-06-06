@@ -38,6 +38,7 @@ import com.example.bikerapp.Information.BikerInformationActivity;
 import com.example.bikerapp.Information.LoginActivity;
 import com.example.bikerapp.Location.LocationActivity;
 import com.example.bikerapp.Location.TrackingService;
+import com.example.bikerapp.Statistics.StatisticsActivity;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -194,21 +195,18 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
             completedReservations.putExtras(bn);
             startActivity(completedReservations);
         }
+
+        if(id == R.id.location || id == R.id.current_status_biker){
+            startLocationActivity();
+        }
+        if (id == R.id.action_statistics) {
+            Intent statistics = new Intent(this, StatisticsActivity.class);
+            startActivity(statistics);
+        }
+
         if (id == R.id.action_settings) {
             Intent information = new Intent(this, BikerInformationActivity.class);
             startActivity(information);
-        }
-        if(id == android.R.id.home){
-            onBackPressed();
-            //getSupportFragmentManager().popBackStack();
-        }
-
-        if(id == R.id.location){
-            startLocationActivity();
-        }
-
-        if(id == R.id.current_status_biker) {
-            startLocationActivity();
         }
 
         return super.onOptionsItemSelected(item);
