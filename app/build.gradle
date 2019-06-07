@@ -28,6 +28,10 @@ android {
 
     }
 }
+    // Graphs
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -62,6 +66,7 @@ dependencies {
     // LocationActivity
     implementation 'com.google.android.gms:play-services-location:16.0.0'
 
-
+    // Graphs
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
 apply plugin: 'com.google.gms.google-services'

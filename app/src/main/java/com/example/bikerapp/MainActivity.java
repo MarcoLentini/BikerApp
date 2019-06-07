@@ -79,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private boolean updating_status = false;
     private boolean listener_activated = false;
     private String documentKey;
-    private Double restaurantDistance;
-    private Double userDistance;
+    private Double restaurantDistance = 0.0;
+    private Double userDistance = 0.0;
     private ListenerRegistration listenerRegistration;
     private ListenerRegistration bsListenerRegistration;
 
@@ -265,6 +265,8 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                     if(doc.get("confirmation_code") != null) {
                         confirmationCode = doc.getLong("confirmation_code");
                     }
+                    restaurantDistance = doc.getDouble("restaurant_distance");
+                    userDistance = doc.getDouble("user_distance");
 
                     tvReservationIdValue.setText(String.valueOf(tmpReservationModel.getRsId()));
                     tvRestaurantName.setText(tmpReservationModel.getNameRest());

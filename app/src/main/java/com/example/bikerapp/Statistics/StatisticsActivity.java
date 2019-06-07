@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -33,7 +34,8 @@ public class StatisticsActivity extends AppCompatActivity {
         setSupportActionBar();
         bikerKey = (String) getIntent().getExtras().get("bikerKey");
         lastSevenDays = new ArrayList<>(DAYS);
-        Collections.fill(lastSevenDays, 0.0);
+        for(int i = 0; i < DAYS; i++)
+            lastSevenDays.add(0, 0.0);
         overallDistance = 0.0;
         todayDistance = 0.0;
         lastWeekDistance = 0.0;
@@ -106,10 +108,11 @@ public class StatisticsActivity extends AppCompatActivity {
     }
 
     private void setDistances(Double todayD, Double lastWeekD, Double lastMonthD, Double overallD) {
-        tvTodayDistanceValue.setText(String.valueOf(todayD) + " km");
-        tvLastWeekDistanceValue.setText(String.valueOf(lastWeekD) + " km");
-        tvLastMonthDistanceValue.setText(String.valueOf(lastMonthD) + " km");
-        tvOverallDistance.setText(String.valueOf(overallD) + " km");
+        DecimalFormat format = new DecimalFormat("0.00");
+        tvTodayDistanceValue.setText(String.valueOf(format.format(todayD)) + " km");
+        tvLastWeekDistanceValue.setText(String.valueOf(format.format(lastWeekD)) + " km");
+        tvLastMonthDistanceValue.setText(String.valueOf(format.format(lastMonthD)) + " km");
+        tvOverallDistance.setText(String.valueOf(format.format(overallD)) + " km");
 
     }
 }
