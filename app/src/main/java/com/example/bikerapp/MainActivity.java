@@ -33,12 +33,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.bikerapp.Helper.Haversine;
 import com.example.bikerapp.Helper.MyReceiver;
 import com.example.bikerapp.Information.BikerInformationActivity;
 import com.example.bikerapp.Information.LoginActivity;
 import com.example.bikerapp.Location.LocationActivity;
 import com.example.bikerapp.Location.TrackingService;
 import com.example.bikerapp.Statistics.StatisticsActivity;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -50,6 +52,9 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -74,11 +79,12 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private boolean updating_status = false;
     private boolean listener_activated = false;
     private String documentKey;
+    private Double restaurantDistance;
+    private Double userDistance;
     private ListenerRegistration listenerRegistration;
     private ListenerRegistration bsListenerRegistration;
 
     private ProgressBar pbInitialSynchronization;
-    // private ProgressBar pbChangingStatus; TODO remove
     private CardView cvNoDelivery;
     private TextView tvNoDelivery;
     private LinearLayout reservationLinearLayout;
@@ -99,9 +105,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Log.d("VITA", "onCreate(...) chiamato");
         pbInitialSynchronization = findViewById(R.id.progress_bar_initial_synchronization);
-        // pbChangingStatus = findViewById(R.id.progressBarChangingStatus); TODO remove
         cvNoDelivery = findViewById(R.id.cardViewNoDelivery);
         tvNoDelivery = findViewById(R.id.textViewNoDelivery);
         reservationLinearLayout = findViewById(R.id.reservationLinearLayout);
@@ -201,6 +205,9 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         }
         if (id == R.id.action_statistics) {
             Intent statistics = new Intent(this, StatisticsActivity.class);
+            Bundle bn = new Bundle();
+            bn.putString("bikerKey", bikerKey);
+            statistics.putExtras(bn);
             startActivity(statistics);
         }
 
@@ -245,18 +252,18 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                 if (dc.getType() == DocumentChange.Type.ADDED) {
                     documentKey = dc.getDocument().getId();
                     DocumentSnapshot doc = dc.getDocument();
-                    ReservationModel tmpReservationModel = new ReservationModel((Long) doc.get("rs_id"),
-                            (String) doc.get("rest_name"),
-                            (String) doc.get("rest_address"),
-                            (String) doc.get("cust_address"),
-                            (String) doc.get("notes"),
-                            (String) doc.get("cust_name"),
-                            (String) doc.get("rest_id"),
-                            (String) doc.get("cust_id"),
-                            (String) doc.get("cust_phone"),
-                            (Timestamp) doc.get("delivery_time"));
+                    ReservationModel tmpReservationModel = new ReservationModel(doc.getLong("rs_id"),
+                            doc.getString("rest_name"),
+                            doc.getString("rest_address"),
+                            doc.getString("cust_address"),
+                            doc.getString("delivery_notes"),
+                            doc.getString("cust_name"),
+                            doc.getString("rest_id"),
+                            doc.getString("cust_id"),
+                            doc.getString("cust_phone"),
+                            null);
                     if(doc.get("confirmation_code") != null) {
-                        confirmationCode = (Long) doc.get("confirmation_code");
+                        confirmationCode = doc.getLong("confirmation_code");
                     }
 
                     tvReservationIdValue.setText(String.valueOf(tmpReservationModel.getRsId()));
@@ -264,7 +271,13 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                     tvRestaurantAddress.setText(tmpReservationModel.getAddrRest());
                     tvUserName.setText(tmpReservationModel.getNameUser());
                     tvUserAddress.setText(tmpReservationModel.getAddrUser());
-                    tvUserNotes.setText(tmpReservationModel.getInfoUser());
+                    String notes = tmpReservationModel.getInfoUser();
+                    if(notes.equals("")) {
+                        tvUserNotes.setVisibility(View.INVISIBLE);
+                    } else {
+                        tvUserNotes.setText(notes);
+                        tvUserNotes.setVisibility(View.VISIBLE);
+                    }
                     String restaurantId = tmpReservationModel.getRestId();
                     db.collection("restaurant").document(restaurantId).get()
                             .addOnCompleteListener(task -> {
@@ -272,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
                                     DocumentSnapshot documentResult = task.getResult();
                                     if (documentResult.exists()) {
-                                        String restaurantImage = (String) documentResult.get("rest_image");
+                                        String restaurantImage = documentResult.getString("rest_image");
                                         Uri tmpUri = Uri.parse(restaurantImage);
                                         Glide.with(getApplicationContext()).load(tmpUri).placeholder(R.drawable.img_biker_1).into(ivRestaurantLogo);
                                     } else {
@@ -282,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                                     Log.d("QueryRestaurants", "get failed with ", task.getException());
                                 }
                             });
-                    Boolean biker_check = (Boolean)dc.getDocument().get("biker_check");
+                    Boolean biker_check = dc.getDocument().getBoolean("biker_check");
                     if(dc.getDocument().get("rs_status").equals("IN_PROGRESS") && !biker_check){
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                         // notificationId is a unique int for each notification that you must define
@@ -336,8 +349,10 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     public void onSelectedCode(String code) {
         int insertedCode = Integer.parseInt(code);
         if(insertedCode == confirmationCode) {
-            db.collection("reservations").document(documentKey).update("rs_status", "DELIVERED");
-            db.collection("reservations").document(documentKey).update("is_current_order", false);
+            Timestamp t = Timestamp.now();
+            db.collection("reservations").document(documentKey).update("rs_status", "DELIVERED",
+                    "is_current_order", false, "delivery_time", t);
+            writeBikerDeliveryStatistics(t);
             removeNewDeliveryNotification();
             setLayoutNoDelivery();
             Snackbar.make(constraintLayout, "Delivery successfully completed",
@@ -363,13 +378,12 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                         if (e != null)
                             return;
                         if(!documentSnapshot.getMetadata().isFromCache()) {
-                            Boolean status = (Boolean) documentSnapshot.get("status");
+                            Boolean status = documentSnapshot.getBoolean("status");
                             SynchronizeBikerStatus(status);
                             changing_status = false;
                             if (listenerRegistration != null) {
                                 listenerRegistration.remove();
                             }
-                            Log.d("VITA", "sincronizzazione iniziale effettuata");
                         }
                     }
                 };
@@ -381,7 +395,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                 }
             } else {
                 if(task.getResult() != null) {
-                    Boolean status = (Boolean) task.getResult().get("status");
+                    Boolean status = task.getResult().getBoolean("status");
                     SynchronizeBikerStatus(status);
                 }
             }
@@ -408,13 +422,12 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                 if (e != null)
                     return;
                 if(!documentSnapshot.getMetadata().isFromCache()) {
-                    Boolean status = (Boolean) documentSnapshot.get("status");
+                    Boolean status = documentSnapshot.getBoolean("status");
                     SynchronizeBikerStatus(status);
                     changing_status = false;
                     if (bsListenerRegistration != null) {
                         bsListenerRegistration.remove();
                         bsListenerRegistration = null;
-                        Log.d("VITA", "bsListenerRegistration ha terminato il suo compito");
                     }
                 }
             }
@@ -425,23 +438,6 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
             // MetadataChanges.INCLUDE: you will receive another snapshot with isFomCache()
             // equal to false once the client has received up-to-date data from the backend
         }
-
-
-        /*if(!listener_activated) {
-            db.collection("bikers").document(bikerKey).addSnapshotListener((EventListener<DocumentSnapshot>) (document, e) -> {
-                if (e != null)
-                    return;
-
-                if(!document.getMetadata().isFromCache()) {
-                    Log.d("VITA", "listenForBikerStatus(...) isFromCache():" + String.valueOf(document.getMetadata().isFromCache()));
-                    Boolean status = (Boolean) document.get("status");
-                    updateStatus(status);
-                    changing_status = false;
-                    // pbChangingStatus.setVisibility(View.GONE); TODO remove
-                }
-            });
-            listener_activated = true;
-        }*/
     }
 
     private void setLayoutDelivery() {
@@ -496,13 +492,11 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     @Override
     protected void onStop() {
         super.onStop();
-        //Log.d("VITA", "onStop(...) chiamato");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //Log.d("VITA", "onDestroy(...) chiamato");
     }
 
     @Override
@@ -517,13 +511,10 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                         Boolean status = bn.getBoolean("biker_status");
                         changing_status = bn.getBoolean("changing_status");
                         updating_status = bn.getBoolean("updating_status");
-                        Log.d("VITA", "onActivityResult(...) (b_s)(c_s)(u_s): " +String.valueOf(status) + String.valueOf(changing_status) + String.valueOf(updating_status));
                         SynchronizeBikerStatus(status);
                         if(changing_status) {
                             listenForBikerStatus();
                         }
-                        //if(changing_status) TODO remove
-                            //pbChangingStatus.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -543,5 +534,19 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(MyReceiver);
+    }
+
+    private void writeBikerDeliveryStatistics(Timestamp timestamp) {
+        Map<String, Object> resStatistics = new HashMap<>();
+        resStatistics.put("biker_key", bikerKey);
+        resStatistics.put("timestamp", timestamp);
+        Double distance = restaurantDistance + userDistance;
+        resStatistics.put("distance", distance);
+        db.collection("bikers_statistics").document().set(resStatistics).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("MACT", "Statistics correctly write to server");
+            }
+        });
     }
 }
