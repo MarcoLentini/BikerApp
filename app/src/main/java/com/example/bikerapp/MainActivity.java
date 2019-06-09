@@ -374,18 +374,15 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
 
             if(!task.isSuccessful()) {
                 showConnectionErrorDialog();
-                EventListener<DocumentSnapshot> eventListener = new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        if (e != null)
-                            return;
-                        if(!documentSnapshot.getMetadata().isFromCache()) {
-                            Boolean status = documentSnapshot.getBoolean("status");
-                            SynchronizeBikerStatus(status);
-                            changing_status = false;
-                            if (listenerRegistration != null) {
-                                listenerRegistration.remove();
-                            }
+                EventListener<DocumentSnapshot> eventListener = (documentSnapshot, e) -> {
+                    if (e != null)
+                        return;
+                    if(!documentSnapshot.getMetadata().isFromCache()) {
+                        Boolean status = documentSnapshot.getBoolean("status");
+                        SynchronizeBikerStatus(status);
+                        changing_status = false;
+                        if (listenerRegistration != null) {
+                            listenerRegistration.remove();
                         }
                     }
                 };
@@ -418,19 +415,16 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     }
 
     private void listenForBikerStatus() {
-        EventListener<DocumentSnapshot> eventListener = new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if (e != null)
-                    return;
-                if(!documentSnapshot.getMetadata().isFromCache()) {
-                    Boolean status = documentSnapshot.getBoolean("status");
-                    SynchronizeBikerStatus(status);
-                    changing_status = false;
-                    if (bsListenerRegistration != null) {
-                        bsListenerRegistration.remove();
-                        bsListenerRegistration = null;
-                    }
+        EventListener<DocumentSnapshot> eventListener = (documentSnapshot, e) -> {
+            if (e != null)
+                return;
+            if(!documentSnapshot.getMetadata().isFromCache()) {
+                Boolean status = documentSnapshot.getBoolean("status");
+                SynchronizeBikerStatus(status);
+                changing_status = false;
+                if (bsListenerRegistration != null) {
+                    bsListenerRegistration.remove();
+                    bsListenerRegistration = null;
                 }
             }
         };
@@ -544,11 +538,6 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         resStatistics.put("timestamp", timestamp);
         Double distance = restaurantDistance + userDistance;
         resStatistics.put("distance", distance);
-        db.collection("bikers_statistics").document().set(resStatistics).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d("MACT", "Statistics correctly write to server");
-            }
-        });
+        db.collection("bikers_statistics").document().set(resStatistics).addOnSuccessListener(aVoid -> Log.d("MACT", "Statistics correctly write to server"));
     }
 }
