@@ -83,7 +83,6 @@ public class BikerInformationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_biker_information);
 
         String title=getString(R.string.InfoTitle);
         getSupportActionBar().setTitle(title);
@@ -100,7 +99,7 @@ public class BikerInformationActivity extends AppCompatActivity {
         if (user == null || bikerKey.equals("")) {
             finish();
         }
-
+        setContentView(R.layout.waiting_view);
         //Get Firestore instance
         db = FirebaseFirestore.getInstance();
 
@@ -131,6 +130,7 @@ public class BikerInformationActivity extends AppCompatActivity {
                                 );
                             }
                                 // Image Profile
+                            setContentView(R.layout.activity_biker_information);
 
                             ImageView imageAddButton = findViewById(R.id.background_img);
                             imageAddButton.setOnClickListener(v -> {

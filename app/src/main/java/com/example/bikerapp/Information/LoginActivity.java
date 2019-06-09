@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
-
+auth.signOut();
         if (auth.getCurrentUser() != null) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
@@ -50,6 +51,9 @@ public class LoginActivity extends AppCompatActivity {
 
         // set the view now
         setContentView(R.layout.activity_login);
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
 
         inputEmail = findViewById(R.id.email);
         inputPassword = findViewById(R.id.password);
@@ -78,6 +82,11 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             progressBar.setVisibility(View.VISIBLE);
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
 
             //authenticate user
             auth.signInWithEmailAndPassword(email, password)
@@ -130,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                                 Map<String, Object> biker = new HashMap<>();
                                                 biker.put("user_id", auth.getCurrentUser().getUid());
-                                                biker.put("status", "disabled");
+                                                biker.put("status", false);
                                                 bikerDRef.set(biker)
                                                         .addOnSuccessListener(documentReference -> {
                                                             Map<String, Object> biker_id = new HashMap<>();
