@@ -1,17 +1,14 @@
 package com.example.bikerapp.Statistics;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bikerapp.R;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
@@ -19,7 +16,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,7 +26,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 
 public class StatisticsActivity extends AppCompatActivity {
@@ -62,9 +57,7 @@ public class StatisticsActivity extends AppCompatActivity {
         tvLastMonthDistanceValue = findViewById(R.id.textViewLastMonthDistanceValue);
         tvOverallDistance = findViewById(R.id.textViewOverallDistanceValue);
         chart = findViewById(R.id.chart);
-        Timestamp currentTimestamp = Timestamp.now();
-        Log.d("SACT", currentTimestamp.toDate().toString());
-        getBikerStatistics(currentTimestamp);
+        getBikerStatistics();
     }
 
     @Override
@@ -82,7 +75,8 @@ public class StatisticsActivity extends AppCompatActivity {
         }
     }
 
-    private void getBikerStatistics(Timestamp currentTimestamp) {
+    private void getBikerStatistics() {
+        Date today = getToday();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("bikers_statistics").whereEqualTo("biker_key", bikerKey).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
@@ -94,12 +88,11 @@ public class StatisticsActivity extends AppCompatActivity {
                     for(DocumentSnapshot doc : documents) {
                         Timestamp timestamp = doc.getTimestamp("timestamp");
                         Double distance = doc.getDouble("distance");
-                        int differenceInDays = getDays(currentTimestamp.toDate(), timestamp.toDate());
-                        Log.d("SACT", "differenceInDays:" + differenceInDays);
+                        int differenceInDays = getDays(today, timestamp.toDate());
                         addToStatistics(differenceInDays, distance);
                     }
                     setDistances(todayDistance, lastWeekDistance, lastMonthDistance, overallDistance);
-                    setDataAndDrawChart(currentTimestamp);
+                    setDataAndDrawChart(today);
                 }
             } else {
                 Toast.makeText(getApplicationContext(), "Some problem occurred. Data cannot be retrieved!",
@@ -108,11 +101,27 @@ public class StatisticsActivity extends AppCompatActivity {
         });
     }
 
+    private Date getToday() {
+        Calendar c = Calendar.getInstance();
+        // set the calendar to start of today
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
 
-    private int getDays(Date current, Date old) {
-        long difference = (current.getTime() - old.getTime()) / (24 * 60 * 60 * 1000);
-        int ret = ((Long) Math.abs(difference)).intValue();
-        return ret;
+        return c.getTime();
+    }
+
+    private int getDays(Date today, Date old) {
+        long difference;
+
+        if(old.before(today)) {
+            difference = ((today.getTime() - old.getTime()) / (24 * 60 * 60 * 1000)) + 1;
+        } else {
+            difference = 0;
+        }
+
+        return ((Long) Math.abs(difference)).intValue();
     }
 
     private void addToStatistics(int days, Double distance) {
@@ -136,7 +145,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
     }
 
-    private void setDataAndDrawChart(Timestamp currentTimestamp) {
+    private void setDataAndDrawChart(Date today) {
         ArrayList<Entry> entries = new ArrayList<>();
         for(int i = 0; i < DAYS; i++)
             entries.add(new Entry(i, lastSevenDays.get(DAYS -1 - i).floatValue()));
@@ -169,7 +178,7 @@ public class StatisticsActivity extends AppCompatActivity {
         SimpleDateFormat simpleDateformat = new SimpleDateFormat("E"); // the day of the week abbreviated
         Calendar cal = Calendar.getInstance();
         for(int i = 0; i < DAYS; i++) {
-            cal.setTime(currentTimestamp.toDate());
+            cal.setTime(today);
             cal.add(Calendar.DATE, -i);
             String day = simpleDateformat.format(cal.getTime());
             week[DAYS -1 - i] = day;
