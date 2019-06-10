@@ -1,5 +1,7 @@
 package com.example.bikerapp.Statistics;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +12,8 @@ import android.widget.Toast;
 import com.example.bikerapp.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -137,27 +141,37 @@ public class StatisticsActivity extends AppCompatActivity {
         for(int i = 0; i < DAYS; i++)
             entries.add(new Entry(i, lastSevenDays.get(DAYS -1 - i).floatValue()));
 
-        LineDataSet dataSet = new LineDataSet(entries, "Km achieved last 7 days");
+        LineDataSet dataSet = new LineDataSet(entries, null);
+        // Circle properties
+        dataSet.setCircleRadius(7f);
+        dataSet.setCircleColor(ContextCompat.getColor(this, R.color.colorAccent));
+        dataSet.setValueTextSize(16f);
+        dataSet.setValueTextColor(ContextCompat.getColor(this, R.color.colorAccent));
+        dataSet.setValueTypeface(Typeface.DEFAULT_BOLD);
+        dataSet.setDrawCircleHole(false);
+        // Line properties
         dataSet.setColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        dataSet.setValueTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        dataSet.setLineWidth(3f);
 
-        chart.getAxisLeft().setDrawGridLines(false);
-        chart.getXAxis().setDrawGridLines(false);
-        //****
-        // Controlling X axis
+        // Grid properties
+        chart.setDescription(null);
+
+        // X axis Properties
         XAxis xAxis = chart.getXAxis();
-        // Set the xAxis position to bottom. Default is top
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextSize(16f);
+        xAxis.setAvoidFirstLastClipping(true);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE); // Set the xAxis position to bottom. Default is top
+        xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
         //Customizing x axis value
         String week[] = new String[DAYS];
         SimpleDateFormat simpleDateformat = new SimpleDateFormat("E"); // the day of the week abbreviated
         Calendar cal = Calendar.getInstance();
-        cal.setTime(currentTimestamp.toDate());
         for(int i = 0; i < DAYS; i++) {
             cal.setTime(currentTimestamp.toDate());
             cal.add(Calendar.DATE, -i);
             String day = simpleDateformat.format(cal.getTime());
-            Log.d("SACT", day);
             week[DAYS -1 - i] = day;
         }
 
@@ -167,24 +181,35 @@ public class StatisticsActivity extends AppCompatActivity {
                 return week[(int) value];
             }
         };
-
-        xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
         xAxis.setValueFormatter(formatter);
 
-        //***
+        // Controlling left side of y axis
+        YAxis yAxisLeft = chart.getAxisLeft();
+        yAxisLeft.setGranularity(1f);
+        yAxisLeft.setDrawGridLines(false);
+        yAxisLeft.setTextSize(16f);
+        yAxisLeft.setYOffset(10f);
+
         // Controlling right side of y axis
         YAxis yAxisRight = chart.getAxisRight();
         yAxisRight.setEnabled(false);
 
-        //***
-        // Controlling left side of y axis
-        YAxis yAxisLeft = chart.getAxisLeft();
-        yAxisLeft.setGranularity(1f);
-
+        // Legend properties
+        Legend legend = chart.getLegend();
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        legend.setTextSize(16f);
+        legend.setFormSize(10f);
+        LegendEntry[] legendEntries = new LegendEntry[1];
+        LegendEntry legendEntry = new LegendEntry();
+        legendEntry.label = "km";
+        legendEntry.formColor = ContextCompat.getColor(this, R.color.colorAccent);
+        legendEntries[0] = legendEntry;
+        legend.setCustom(legendEntries);
         // Setting Data
         LineData data = new LineData(dataSet);
         chart.setData(data);
-        chart.animateX(2500);
+        //chart.animateX(2500);
         //refresh
         chart.invalidate();
     }
