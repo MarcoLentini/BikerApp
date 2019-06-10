@@ -52,7 +52,6 @@
                      android:id="@+id/textViewUserName"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
-                     android:layout_weight="1"
                      android:padding="4dp"
                      android:drawableStart="@drawable/ic_account_name"
                      android:drawableLeft="@drawable/ic_account_name"
@@ -71,12 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="4dp"
-                    android:drawableTint="@color/colorPrimaryText"
-                    android:drawablePadding="4dp"
-                    android:gravity="center_vertical"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                    android:maxLines="2"
-                    android:ellipsize="end"/>
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
                 <TextView
                     android:id="@+id/textViewKmTravelled"
@@ -84,12 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="4dp"
-                    android:drawableTint="@color/colorPrimaryText"
-                    android:drawablePadding="4dp"
-                    android:gravity="center_vertical"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:maxLines="2"
-                    android:ellipsize="end"/>
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
             </LinearLayout>
     </LinearLayout>
 
