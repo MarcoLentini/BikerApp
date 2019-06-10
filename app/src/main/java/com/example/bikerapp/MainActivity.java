@@ -171,6 +171,19 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode, Na
         if(savedInstanceState == null || !savedInstanceState.getBoolean("read_status")) {
             getAndUpdateBikerStatus();
         }
+
+        View hView =  navigationView.getHeaderView(0);
+        ImageView imageViewNavHeader = hView.findViewById(R.id.imageViewNavHeader);
+        TextView name= hView.findViewById(R.id.textViewNavHeaderTitle);
+        db.collection("users").document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(t -> {
+            if(t.isSuccessful()){
+                DocumentSnapshot doc = t.getResult();
+                name.setText(doc.getString("username"));
+                Uri url = Uri.parse(doc.getString("image_url"));
+                Glide.with(this).load(url).placeholder(R.drawable.biker_logo).into(imageViewNavHeader);
+            }
+        });
+
     }
 
     @Override
