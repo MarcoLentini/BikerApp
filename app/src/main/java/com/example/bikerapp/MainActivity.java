@@ -242,6 +242,8 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                 if (dc.getType() == DocumentChange.Type.ADDED) {
                     documentKey = dc.getDocument().getId();
                     DocumentSnapshot doc = dc.getDocument();
+                    restaurantDistance = doc.getDouble("restaurant_distance");
+                    userDistance = doc.getDouble("user_distance");
                     ReservationModel tmpReservationModel = new ReservationModel(doc.getLong("rs_id"),
                             doc.getString("rest_name"),
                             doc.getString("rest_address"),
@@ -251,12 +253,10 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
                             doc.getString("rest_id"),
                             doc.getString("cust_id"),
                             doc.getString("cust_phone"),
-                            null);
+                            null, restaurantDistance, userDistance);
                     if(doc.get("confirmation_code") != null) {
                         confirmationCode = doc.getLong("confirmation_code");
                     }
-                    restaurantDistance = doc.getDouble("restaurant_distance");
-                    userDistance = doc.getDouble("user_distance");
 
                     tvReservationIdValue.setText(String.valueOf(tmpReservationModel.getRsId()));
                     tvRestaurantName.setText(tmpReservationModel.getNameRest());

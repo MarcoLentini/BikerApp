@@ -72,7 +72,9 @@ public class CompletedReservationsActivity extends AppCompatActivity {
                                     doc.getString("rest_id"),
                                     doc.getString("cust_id"),
                                     doc.getString("cust_phone"),
-                                    doc.getTimestamp("delivery_time"));
+                                    doc.getTimestamp("delivery_time"),
+                                    doc.getDouble("restaurant_distance"),
+                                    doc.getDouble("user_distance"));
                             reservationsData.add(tmpReservationModel);
                         }
                         reservationsAdapter.notifyDataSetChanged();

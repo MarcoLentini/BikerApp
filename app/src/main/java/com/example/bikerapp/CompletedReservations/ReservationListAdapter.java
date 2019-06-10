@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.example.bikerapp.R;
 import com.example.bikerapp.ReservationModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 class ReservationListAdapter extends RecyclerView.Adapter<ReservationListAdapter.ReservationViewHolder>{
@@ -19,11 +21,13 @@ class ReservationListAdapter extends RecyclerView.Adapter<ReservationListAdapter
     private Context context;
     private ArrayList<ReservationModel> reservationDataSet;
     private LayoutInflater mInflater;
+    private SimpleDateFormat dateFormat;
 
     public ReservationListAdapter(Context context, ArrayList<ReservationModel> reservationList) {
             this.context = context;
             this.mInflater = LayoutInflater.from(context);
             this.reservationDataSet = reservationList;
+            this.dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     }
 
     @Override
@@ -43,7 +47,10 @@ class ReservationListAdapter extends RecyclerView.Adapter<ReservationListAdapter
         holder.tvReservationid.setText(reservationModel.getRsId().toString());
         holder.tvNameRest.setText(reservationModel.getNameRest());
         holder.tvUserName.setText(reservationModel.getNameUser());
-        //holder.tvTimestamp.setText(reservationModel.getTimestamp().toString());
+        Date date = reservationModel.getTimestamp().toDate();
+        holder.tvTimestamp.setText(dateFormat.format(date));
+        Double distance = reservationModel.getRestDist() + reservationModel.getUserDist();
+        holder.tvKmTravelled.setText(String.valueOf(distance) + " km");
     }
 
     @Override
