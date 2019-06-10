@@ -13,10 +13,15 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -57,7 +62,7 @@ import java.util.Map;
 
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 
-public class MainActivity extends AppCompatActivity implements ISelectedCode {
+public class MainActivity extends AppCompatActivity implements ISelectedCode, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int WORKING_STATUS = 1;
 
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.drawer_activity_main);
 
         pbInitialSynchronization = findViewById(R.id.progress_bar_initial_synchronization);
         cvNoDelivery = findViewById(R.id.cardViewNoDelivery);
@@ -123,6 +128,14 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.reservation_title);
         setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
 
         MyReceiver = new MyReceiver(this);
 
@@ -182,30 +195,9 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.action_completed_reservations) {
-            Intent completedReservations = new Intent(this, CompletedReservationsActivity.class);
-            Bundle bn = new Bundle();
-            bn.putString("bikerKey", bikerKey);
-            completedReservations.putExtras(bn);
-            startActivity(completedReservations);
-        }
-
         if(id == R.id.location || id == R.id.current_status_biker){
             startLocationActivity();
         }
-        if (id == R.id.action_statistics) {
-            Intent statistics = new Intent(this, StatisticsActivity.class);
-            Bundle bn = new Bundle();
-            bn.putString("bikerKey", bikerKey);
-            statistics.putExtras(bn);
-            startActivity(statistics);
-        }
-
-        if (id == R.id.action_settings) {
-            Intent information = new Intent(this, BikerInformationActivity.class);
-            startActivity(information);
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -527,5 +519,50 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         Double distance = restaurantDistance + userDistance;
         resStatistics.put("distance", distance);
         db.collection("bikers_statistics").document().set(resStatistics).addOnSuccessListener(aVoid -> Log.d("MACT", "Statistics correctly write to server"));
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        int id = menuItem.getItemId();
+
+        if (id == R.id.nav_home){
+
+        }else if (id == R.id.nav_completed_reservation){  Intent completedReservations = new Intent(this, CompletedReservationsActivity.class);
+            Bundle bn = new Bundle();
+            bn.putString("bikerKey", bikerKey);
+            completedReservations.putExtras(bn);
+            startActivity(completedReservations);
+        }else if (id == R.id.nav_statistics){
+            Intent statistics = new Intent(MainActivity.this, StatisticsActivity.class);
+            Bundle bn = new Bundle();
+            bn.putString("bikerKey", bikerKey);
+            statistics.putExtras(bn);
+            startActivity(statistics);
+        }else if (id == R.id.nav_setting){
+            Intent intent = new Intent(MainActivity.this, BikerInformationActivity.class);
+            startActivity(intent);
+        }else if (id == R.id.nav_logout){
+            signOut();
+        }
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    //sign out method
+    public void signOut() {
+        auth.signOut();
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        finish();
     }
 }

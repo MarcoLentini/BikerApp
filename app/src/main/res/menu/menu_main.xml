@@ -9,28 +9,13 @@
         android:title="@string/action_status"
         app:showAsAction="always|withText"
         android:visible="false"/>
-    <item
-        android:id="@+id/action_completed_reservations"
-        android:orderInCategory="2"
-        android:icon="@drawable/ic_baseline_history"
-        android:title="@string/action_completed_reservations"
-        app:showAsAction="ifRoom"
-        app:iconTint="@color/white"/>
+
     <item
         android:id="@+id/location"
-        android:orderInCategory="3"
+        android:orderInCategory="2"
         android:title="@string/location"
         app:showAsAction="never"
         android:enabled="false"/>
-    <item
-        android:id="@+id/action_statistics"
-        android:orderInCategory="4"
-        android:title="@string/action_statistics"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="5"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+
 
 </menu>

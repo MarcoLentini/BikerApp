@@ -22,4 +22,7 @@
 <dimen name="standard_field_width">160dp</dimen>
 <dimen name="margin_1">8dp</dimen>
 <dimen name="margin_2">16dp</dimen>
+<dimen name="nav_header_vertical_spacing">8dp</dimen>
+<dimen name="nav_header_height">176dp</dimen>
+
 </resources>

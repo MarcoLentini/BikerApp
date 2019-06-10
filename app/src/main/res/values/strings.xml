@@ -136,4 +136,11 @@
     <string name="action_completed_reservations">Completed reservations</string>
     <string name="action_status">Status</string>
     <string name="statistics_activity_title">Statistics</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_home">Home</string>
+    <string name="contentDescription">TODO</string>
+
 </resources>

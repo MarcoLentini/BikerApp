@@ -122,5 +122,12 @@
     <string name="action_status">状态</string>
     <string name="statistics_activity_title">分析</string>
     <string name="location">在线/离线</string>
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_home">主页</string>
+    <string name="startLocation">开始工作</string>
+    <string name="stopLocation">停止工作</string>
+    <string name="contentDescription">TODO</string>
 
 </resources>
