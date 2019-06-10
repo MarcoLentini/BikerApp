@@ -1,14 +1,15 @@
-package com.example.bikerapp;
+package com.example.bikerapp.CompletedReservations;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.bikerapp.R;
+import com.example.bikerapp.ReservationModel;
 
 import java.util.ArrayList;
 
@@ -41,10 +42,8 @@ class ReservationListAdapter extends RecyclerView.Adapter<ReservationListAdapter
 
         holder.tvReservationid.setText(reservationModel.getRsId().toString());
         holder.tvNameRest.setText(reservationModel.getNameRest());
-        holder.tvAddrRest.setText(reservationModel.getAddrRest());
         holder.tvUserName.setText(reservationModel.getNameUser());
-        holder.tvAddrUser.setText(reservationModel.getAddrUser());
-        holder.tvUserNotes.setText(reservationModel.getInfoUser());
+        //holder.tvTimestamp.setText(reservationModel.getTimestamp().toString());
     }
 
     @Override
@@ -55,20 +54,18 @@ class ReservationListAdapter extends RecyclerView.Adapter<ReservationListAdapter
     static class ReservationViewHolder extends RecyclerView.ViewHolder {
         TextView tvReservationid;
         TextView tvNameRest;
-        TextView tvAddrRest;
-        TextView tvAddrUser;
         TextView tvUserName;
-        TextView tvUserNotes;
+        TextView tvTimestamp;
+        TextView tvKmTravelled;
 
         ReservationViewHolder(View itemView) {
              super(itemView);
 
              tvReservationid = itemView.findViewById(R.id.textViewReservationId);
              tvNameRest = itemView.findViewById(R.id.textViewRestaurantName);
-             tvAddrRest = itemView.findViewById(R.id.textViewRestaurantAddress);
              tvUserName = itemView.findViewById(R.id.textViewUserName);
-             tvAddrUser = itemView.findViewById(R.id.textViewUserAddress);
-             tvUserNotes = itemView.findViewById(R.id.textViewUserNotes);
+             tvTimestamp = itemView.findViewById(R.id.textViewTimestamp);
+             tvKmTravelled = itemView.findViewById(R.id.textViewKmTravelled);
         }
     }
 

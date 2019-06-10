@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Statistics.StatisticsActivity"></activity>
         <activity
-            android:name=".CompletedReservationsActivity"
+            android:name=".CompletedReservations.CompletedReservationsActivity"
             android:screenOrientation="portrait" />
 
         <receiver android:name=".Helper.MyReceiver">

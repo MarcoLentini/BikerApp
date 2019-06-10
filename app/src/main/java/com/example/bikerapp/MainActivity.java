@@ -30,24 +30,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.bikerapp.Helper.Haversine;
+import com.example.bikerapp.CodeManagement.CodePickerDialog;
+import com.example.bikerapp.CodeManagement.ISelectedCode;
+import com.example.bikerapp.CompletedReservations.CompletedReservationsActivity;
 import com.example.bikerapp.Helper.MyReceiver;
 import com.example.bikerapp.Information.BikerInformationActivity;
 import com.example.bikerapp.Information.LoginActivity;
 import com.example.bikerapp.Location.LocationActivity;
 import com.example.bikerapp.Location.TrackingService;
 import com.example.bikerapp.Statistics.StatisticsActivity;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -55,8 +54,6 @@ import com.google.firebase.firestore.Source;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 
@@ -77,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
     private boolean biker_status = false;
     private boolean changing_status = false;
     private boolean updating_status = false;
-    private boolean listener_activated = false;
     private String documentKey;
     private Double restaurantDistance = 0.0;
     private Double userDistance = 0.0;
@@ -118,12 +114,8 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         tvUserName = findViewById(R.id.textViewUserName);
         tvUserAddress = findViewById(R.id.textViewUserAddress);
         tvUserNotes = findViewById(R.id.textViewUserNotes);
-        tvRestaurantAddress.setOnClickListener(v -> {
-            startGoogleMaps(tvRestaurantAddress.getText().toString());
-        });
-        tvUserAddress.setOnClickListener(v -> {
-            startGoogleMaps(tvUserAddress.getText().toString());
-        });
+        tvRestaurantAddress.setOnClickListener(v -> startGoogleMaps(tvRestaurantAddress.getText().toString()));
+        tvUserAddress.setOnClickListener(v -> startGoogleMaps(tvUserAddress.getText().toString()));
         Button btnConcludeDelivery = findViewById(R.id.buttonConcludeDelivery);
         CodePickerDialog pickerDialog = new CodePickerDialog();
         btnConcludeDelivery.setOnClickListener(v -> pickerDialog.show(getSupportFragmentManager(), "code picker"));
@@ -133,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         setSupportActionBar(toolbar);
 
         MyReceiver = new MyReceiver(this);
-        // broadcastIntent(); c'è già in onResume
 
         SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
         bikerKey = sharedPref.getString("bikerKey","");
@@ -174,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
         super.onRestoreInstanceState(savedInstanceState);
         if(savedInstanceState.getBoolean("read_status")) {
             SynchronizeBikerStatus(savedInstanceState.getBoolean("biker_status"));
-            Log.d("VITA", "onRestoreInstanceState(...) chiamato e mette biker_status:" + String.valueOf(savedInstanceState.getBoolean("biker_status")));
         }
     }
 
@@ -407,9 +397,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode {
             alertBuilder.setTitle("Connection error!");
             alertBuilder.setMessage(getString(R.string.alert_connection_start));
             alertBuilder.setCancelable(false);
-            alertBuilder.setPositiveButton("OK", (dialog, which) -> {
-                connection_msg_read = true;
-            });
+            alertBuilder.setPositiveButton("OK", (dialog, which) -> connection_msg_read = true);
             alertBuilder.create().show();
         }
     }
