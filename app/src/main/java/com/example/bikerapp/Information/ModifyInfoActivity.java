@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import java.util.regex.Pattern;
 
 public class ModifyInfoActivity extends AppCompatActivity {
 
+    private ProgressBar progressBarSavingChanges;
     private TextView tvInfoMessage;
     private EditText etEditInfo;
     private Button btnOk;
@@ -50,6 +52,7 @@ public class ModifyInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_info);
 
+        progressBarSavingChanges = findViewById(R.id.progressBarSavingChanges);
         tvInfoMessage = findViewById(R.id.textViewTypeInfo);
         etEditInfo = findViewById(R.id.editTextChangeInfo);
         btnOk = findViewById(R.id.buttonOk);
@@ -142,10 +145,11 @@ public class ModifyInfoActivity extends AppCompatActivity {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBarSavingChanges.setVisibility(View.VISIBLE);
+
                 String userName;
                 String userEmail;
                 String userPhoneNumber;
-
                 switch (fieldName) {
                     case "user_password":
 
@@ -154,6 +158,8 @@ public class ModifyInfoActivity extends AppCompatActivity {
                         // Prompt the user to re-provide their sign-in credentials
                         user.reauthenticate(credential)
                                 .addOnSuccessListener(aut->{
+                                    progressBarSavingChanges.setVisibility(View.GONE);
+
                                     Intent retIntent;
                                     Bundle bn;
                                             Log.d("modifyInfo", "User re-authenticated.");
@@ -171,6 +177,7 @@ public class ModifyInfoActivity extends AppCompatActivity {
                                             getSystemService(Context.INPUT_METHOD_SERVICE);
                                     imm.showSoftInput(etEditInfo, InputMethodManager.SHOW_IMPLICIT);
                                     mioToast.show();
+                                   progressBarSavingChanges.setVisibility(View.GONE);
 
                                     etEditInfo.selectAll();
                                 });
@@ -178,12 +185,15 @@ public class ModifyInfoActivity extends AppCompatActivity {
 
                         break;
                     case "user_name":
+
                         userName = etEditInfo.getText().toString();
                         if (!isValidUsername(userName)) {
                             Map<String, Object> user_name = new HashMap<>();
                             user_name.put("username", userName);
                             db.collection("users").document(auth.getCurrentUser().getUid()).update(user_name)
-                                    .addOnSuccessListener(task->{Intent retIntent;
+                                    .addOnSuccessListener(task->{
+                                        progressBarSavingChanges.setVisibility(View.GONE);
+                                        Intent retIntent;
                                         Bundle bn;
                                         Toast.makeText(ModifyInfoActivity.this, getString(R.string.username_updated), Toast.LENGTH_LONG).show();
                                         retIntent = new Intent(getApplicationContext(), BikerInformationActivity.class);
@@ -195,7 +205,7 @@ public class ModifyInfoActivity extends AppCompatActivity {
                                         finish();})
                                     .addOnFailureListener((task->{
                                         Log.d("ModifyInfo", "failed update username");
-
+                                        progressBarSavingChanges.setVisibility(View.GONE);
                                         Toast.makeText(ModifyInfoActivity.this, getString(R.string.username_failed_update), Toast.LENGTH_LONG).show();
                                     }));
                         } else {
@@ -207,6 +217,7 @@ public class ModifyInfoActivity extends AppCompatActivity {
                                     getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.showSoftInput(etEditInfo, InputMethodManager.SHOW_IMPLICIT);
                             mioToast.show();
+                            progressBarSavingChanges.setVisibility(View.GONE);
 
                             etEditInfo.selectAll();
                         }
@@ -217,6 +228,8 @@ public class ModifyInfoActivity extends AppCompatActivity {
                         // Prompt the user to re-provide their sign-in credentials
                         user.reauthenticate(credential)
                                 .addOnSuccessListener(aut -> {
+                                    progressBarSavingChanges.setVisibility(View.GONE);
+
                                     Log.d("modifyInfo", "User re-authenticated.");
                                     Intent intent1 = new Intent(getApplicationContext(), ModifyInfoActivity.class);
                                     Bundle bundle = new Bundle();
@@ -226,6 +239,8 @@ public class ModifyInfoActivity extends AppCompatActivity {
                                     startActivity(intent1);
                                 })
                                 .addOnFailureListener(noaut -> {
+                                    progressBarSavingChanges.setVisibility(View.GONE);
+
                                     Log.d("modifyInfo", "User failed re-authenticated.");
                                     Toast mioToast = Toast.makeText(ModifyInfoActivity.this,
                                             getString(R.string.invalid_password),
@@ -248,6 +263,8 @@ public class ModifyInfoActivity extends AppCompatActivity {
                                     .addOnSuccessListener(task -> {
                                         db.collection("users").document(auth.getCurrentUser().getUid()).update(user_email)
                                                 .addOnSuccessListener(task1 -> {
+                                                    progressBarSavingChanges.setVisibility(View.GONE);
+
                                                     Toast.makeText(ModifyInfoActivity.this, getString(R.string.email_updated), Toast.LENGTH_LONG).show();
                                                     signOut();
                                                     finish();
@@ -260,6 +277,8 @@ public class ModifyInfoActivity extends AppCompatActivity {
                                                 });
                                     })
                                     .addOnFailureListener(task2 -> {
+                                        progressBarSavingChanges.setVisibility(View.GONE);
+
                                         Log.d("BikerID", "Failed update email auth"+task2.getMessage());
                                         Toast.makeText(ModifyInfoActivity.this, getString(R.string.email_failed_updated), Toast.LENGTH_LONG).show();
                                         etEditInfo.selectAll();
@@ -273,6 +292,7 @@ public class ModifyInfoActivity extends AppCompatActivity {
                                     getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.showSoftInput(etEditInfo, InputMethodManager.SHOW_IMPLICIT);
                             mioToast.show();
+                            progressBarSavingChanges.setVisibility(View.GONE);
 
                             etEditInfo.selectAll();
                         }
@@ -283,7 +303,10 @@ public class ModifyInfoActivity extends AppCompatActivity {
                             Map<String, Object> user_phone = new HashMap<>();
                             user_phone.put("phone", userPhoneNumber);
                             db.collection("users").document(auth.getCurrentUser().getUid()).update(user_phone)
-                                    .addOnSuccessListener((task->{Intent retIntent;
+                                    .addOnSuccessListener((task->{
+                                        progressBarSavingChanges.setVisibility(View.GONE);
+
+                                        Intent retIntent;
                                         Bundle bn;
                                         Toast.makeText(ModifyInfoActivity.this, getString(R.string.phone_updated), Toast.LENGTH_LONG).show();
                                         retIntent = new Intent(getApplicationContext(), BikerInformationActivity.class);
@@ -294,6 +317,8 @@ public class ModifyInfoActivity extends AppCompatActivity {
                                         setResult(RESULT_OK, retIntent);
                                         finish();}))
                                     .addOnFailureListener(task->{
+                                        progressBarSavingChanges.setVisibility(View.GONE);
+
                                         Log.d("BikerID", "Failed update phone");
                                         Toast.makeText(ModifyInfoActivity.this, getString(R.string.phone_failed_updated), Toast.LENGTH_LONG).show();
                                         etEditInfo.selectAll();});
@@ -307,6 +332,7 @@ public class ModifyInfoActivity extends AppCompatActivity {
                                     getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.showSoftInput(etEditInfo, InputMethodManager.SHOW_IMPLICIT);
                             mioToast.show();
+                            progressBarSavingChanges.setVisibility(View.GONE);
 
                             etEditInfo.selectAll();
                         }
