@@ -79,8 +79,7 @@
                         android:layout_height="160dp"
                         android:contentDescription="Restaurant's image"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/img_biker_1"
-                        android:tint="#BBF9D585" />
+                        android:src="@drawable/img_biker_1" />
 
                     <TextView
                         android:id="@+id/textViewRestaurantName"
