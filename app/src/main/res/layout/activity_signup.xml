@@ -26,32 +26,41 @@
 
         <RelativeLayout
             android:id="@+id/linearLayoutOffer"
-            android:layout_width="@dimen/toolbar_profile_width"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/user_image1"
+            <RelativeLayout
+                android:id="@+id/user_image11"
                 android:layout_width="@dimen/toolbar_profile_width"
                 android:layout_height="@dimen/toolbar_profile_width"
-                android:layout_marginTop="@dimen/activity_padding"
-                android:layout_marginBottom="@dimen/activity_padding"
-                android:scaleType="centerInside"
-                android:src="@drawable/img_biker_1"
-                app:civ_border_color="@color/colorPrimaryText"
-                app:civ_border_width="2sp" />
+                android:background="@color/white"
+                > <!-- border width -->
+
+                <ImageView
+                    android:id="@+id/user_image1"
+                    android:layout_width="@dimen/toolbar_profile_width"
+                    android:layout_height="@dimen/toolbar_profile_width"
+                    android:src="@drawable/img_biker_1"
+
+
+                    />
+            </RelativeLayout>
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/background_img_user1"
                 android:layout_width="48sp"
                 android:layout_height="48sp"
-                android:layout_alignBottom="@id/user_image1"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@id/user_image11"
+                android:layout_alignEnd="@id/user_image11"
+                android:layout_alignRight="@id/user_image11"
+                android:layout_marginBottom="-24dp"
+                android:layout_marginEnd="-24dp"
+                android:layout_marginRight="-24dp"
+
                 android:scaleType="centerInside"
                 android:src="@drawable/background"
                 app:civ_border_color="@android:color/white"
@@ -79,6 +88,8 @@
                 android:cropToPadding="false"
                 android:src="@drawable/ic_camera"
                 android:tint="@android:color/white" />
+
+
         </RelativeLayout>
 
 

@@ -69,7 +69,7 @@ public class SignupActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private FirebaseAuth auth;
     private static final String bikerDataFile = "BikerDataFile";
-
+    private DocumentReference bikerDRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +160,7 @@ public class SignupActivity extends AppCompatActivity {
             auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(SignupActivity.this, task -> {
 
-                        progressBar.setVisibility(View.GONE);
+
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
@@ -170,7 +170,7 @@ public class SignupActivity extends AppCompatActivity {
                         } else {
 
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            DocumentReference bikerDRef = db.collection("bikers").document();
+                             bikerDRef = db.collection("bikers").document();
 
                             Map<String, Object> biker = new HashMap<>();
                             biker.put("user_id", auth.getCurrentUser().getUid());
@@ -185,13 +185,13 @@ public class SignupActivity extends AppCompatActivity {
                                         db.collection("users").document(auth.getCurrentUser().getUid())
                                                 .set(user)
                                                 .addOnSuccessListener(documentReference1 -> {
-                                                    uploadOnFirebase(file_image);
-                                                    SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
+                                                    uploadOnFirebase(user_image);
+                                                 /*   SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
                                                     SharedPreferences.Editor editor = sharedPref.edit();
                                                     editor.putString("bikerKey", bikerDRef.getId());
                                                     editor.commit();
                                                     startActivity(new Intent(SignupActivity.this, MainActivity.class));
-                                                    finish();
+                                                    finish();*/
                                                 })
                                                 .addOnFailureListener(e -> Toast.makeText(SignupActivity.this, getString(R.string.create_profile_failed), Toast.LENGTH_SHORT).show());
                                     })
@@ -253,6 +253,7 @@ public class SignupActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK) {
             if(requestCode == CAMERA_REQUEST)  {
                 user_image = file_image;
+                findViewById(R.id.user_image1).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.user_image1));
 
 
@@ -260,6 +261,7 @@ public class SignupActivity extends AppCompatActivity {
             if(requestCode == GALLERY_REQUEST){
 
                 user_image = data.getData();
+                findViewById(R.id.user_image1).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                 Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.user_image1));
 
             }
@@ -282,12 +284,25 @@ public class SignupActivity extends AppCompatActivity {
             return photoRef.getDownloadUrl();
         }).addOnSuccessListener(downloadUri -> {
             // Upload succeeded
-            Log.d(TAG, "uploadFromUri: getDownloadUri success");
+            Log.d("sugnup1", "uploadFromUri: getDownloadUri success");
             user_image = downloadUri;
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("users").document(auth.getCurrentUser().getUid()).update("image_url",user_image.toString()).addOnCompleteListener(task->{
-                if(task.isSuccessful())
-                    Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.img_profile));
+
+                 if(task.isSuccessful()){
+                     SharedPreferences sharedPref = getSharedPreferences(bikerDataFile, Context.MODE_PRIVATE);
+                     SharedPreferences.Editor editor = sharedPref.edit();
+                     editor.putString("bikerKey", bikerDRef.getId());
+                     editor.commit();
+                     startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                     finish();
+                 }
+
+                else
+                     Log.d("sugnup1", "uploadFromUri: getDownloadUri failed");
+
+
+                //   Glide.with(this).load(user_image).placeholder(R.drawable.img_biker_1).into((ImageView) findViewById(R.id.img_profile));
             });
 
             try {
