@@ -71,16 +71,6 @@
             android:text="@string/btn_login"
             android:textColor="@android:color/black" />
 
-        <Button
-            android:id="@+id/btn_reset_password_log"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
-            android:background="@null"
-            android:text="@string/btn_forgot_password"
-            android:textAllCaps="false"
-            android:textColor="@color/colorAccentLogin" />
-
         <!-- Link to Login Screen -->
 
         <Button
