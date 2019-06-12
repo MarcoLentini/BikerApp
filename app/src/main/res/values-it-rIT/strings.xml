@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BikerApp</string>
+    <string name="app_name">FoodEaTORider</string>
     <string name="default_user_name">Inserisci username</string>
     <string name="default_user_email">Inserisci email</string>
     <string name="default_user_description">Inserisci  descrizione</string>
