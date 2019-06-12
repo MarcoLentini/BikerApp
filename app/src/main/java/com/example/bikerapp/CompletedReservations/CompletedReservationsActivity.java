@@ -77,8 +77,9 @@ public class CompletedReservationsActivity extends AppCompatActivity {
                                     doc.getDouble("user_distance"));
                             reservationsData.add(tmpReservationModel);
                         }
-                        reservationsAdapter.notifyDataSetChanged();
                         Collections.sort(reservationsData); // ordino dal più recente al più vecchio
+                        reservationsAdapter.notifyDataSetChanged();
+
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "Some problem occurred. Data cannot be retrieved!",
