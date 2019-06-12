@@ -8,15 +8,15 @@
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/imageViewNavHeader"
-            android:layout_width="@dimen/dp96"
-            android:layout_height="@dimen/dp96"
-            android:layout_gravity="center"
-            android:contentDescription="@string/contentDescription"
-            app:srcCompat="@drawable/biker_logo"
-            app:civ_border_color="@color/colorPrimaryText"
-            app:civ_border_width="2sp"/>
+    <ImageView
+        android:id="@+id/imageViewNavHeader"
+        android:paddingTop="@dimen/dp16"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:contentDescription="@string/contentDescription"
+        android:layout_gravity="center"
+
+        app:srcCompat="@drawable/biker_logo" />
 
     <TextView
         android:id="@+id/textViewNavHeaderTitle"
@@ -24,11 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textAlignment="center"
-        android:padding="2dp"
+        android:padding="8dp"
         android:layout_marginBottom="2dp"
         android:text="@string/username_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/white"/>
-
 
 </LinearLayout>
