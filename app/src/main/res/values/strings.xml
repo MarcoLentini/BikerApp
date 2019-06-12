@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BikerApp</string>
+    <string name="app_name">FoodEaTORider</string>
     <string name="InfoTitle">Information</string>
 
     <!-- Main Activity (Empty) -->
@@ -51,7 +51,7 @@
     <string name="ok_string">Ok</string>
     <string name="perm_denied">Permission Denied</string>
     <string name="title_activity_task">MainActivity</string>
-    <string name="reservation_title">BikerApp</string>
+    <string name="reservation_title">FoodEaTO</string>
     <string name="action_settings">Information</string>
 
     <!-- reservation_item.xml-->
