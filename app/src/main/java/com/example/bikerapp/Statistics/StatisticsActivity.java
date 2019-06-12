@@ -128,7 +128,7 @@ public class StatisticsActivity extends AppCompatActivity {
         overallDistance += distance;
         if(days < 7) {
             lastWeekDistance += distance;
-            lastSevenDays.add(days, lastSevenDays.get(days) + distance);
+            lastSevenDays.set(days, lastSevenDays.get(days) + distance);
             if(days == 0)
                 todayDistance += distance;
         }
