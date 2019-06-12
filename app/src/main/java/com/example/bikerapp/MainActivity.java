@@ -350,6 +350,7 @@ public class MainActivity extends AppCompatActivity implements ISelectedCode, Na
             db.collection("reservations").document(documentKey).update("rs_status", "DELIVERED",
                     "is_current_order", false, "delivery_time", t);
             writeBikerDeliveryStatistics(t);
+            db.collection("biker").document(bikerKey).update("free", true);
             removeNewDeliveryNotification();
             setLayoutNoDelivery();
             Snackbar.make(constraintLayout, "Delivery successfully completed",
