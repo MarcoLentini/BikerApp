@@ -175,6 +175,7 @@ public class SignupActivity extends AppCompatActivity {
                             Map<String, Object> biker = new HashMap<>();
                             biker.put("user_id", auth.getCurrentUser().getUid());
                             biker.put("status", false);
+                            biker.put("free",true);
                             bikerDRef.set(biker)
                                     .addOnSuccessListener(documentReference -> {
                                         Map<String, Object> user = new HashMap<>();
