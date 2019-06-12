@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.bikerapp.R;
 import com.example.bikerapp.ReservationModel;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,7 +51,12 @@ class ReservationListAdapter extends RecyclerView.Adapter<ReservationListAdapter
         Date date = reservationModel.getTimestamp().toDate();
         holder.tvTimestamp.setText(dateFormat.format(date));
         Double distance = reservationModel.getRestDist() + reservationModel.getUserDist();
-        holder.tvKmTravelled.setText(String.valueOf(distance) + " km");
+
+        DecimalFormat format = new DecimalFormat("0.00");
+        String formattedPrice = format.format(reservationModel.getRestDist() + reservationModel.getUserDist());
+
+
+        holder.tvKmTravelled.setText(formattedPrice + " km");
     }
 
     @Override
