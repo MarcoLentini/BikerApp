@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">骑手</string>
+    <string name="default_user_name">用户名</string>
+    <string name="default_user_email">邮箱</string>
+    <string name="default_user_description">个人简介</string>
+    <string name="default_user_phone_number">联系电话</string>
+
+    <string name="name_field_id">user_name</string>
+    <string name="email_field_id">user_email</string>
+    <string name="pwd_field_id">user_password</string>
+    <string name="phone_number__field_id">user_phone_number</string>
+    <string name="description_field_id">user_description</string>
+
+    <string name="InfoTitle">个人信息</string>
+
+    <string name="username_title">用户名</string>
+    <string name="email_title">邮箱</string>
+    <string name="phone_number_title">电话号码</string>
+    <string name="description_title">简介</string>
+    <string name="password_title">更改密码</string>
+    <string name="insert_old_password">填写原密码</string>
+    <string name="insert_password">填写新密码</string>
+    <string name="repeat_password">再次填写确认</string>
+    <string name="invalid_password">无效的密码</string>
+    <string name="different_password">两次填写密码不一致</string>
+    <string name="ok_button">确定</string>
+    <string name="cancel_button">取消</string>
+
+    <string name="insert_username">请输入用户名</string>
+    <string name="insert_email">请输入邮箱</string>
+    <string name="insert_phone_number">请输入电话号码</string>
+    <string name="insert_description">请输入个人简介</string>
+    
+    <!-- Image Profile -->
+    <string name="select_photo">选择照片</string>
+    <string name="take_a_picture">拍摄照片</string>
+    <string name="pick_from_gallery">从相册选择</string>
+    <string name="cancel_string">取消</string>
+    <string name="image_disappear">选择的照片不可用</string>
+
+    <!-- Permission -->
+    <string name="perm_needed">请求权限</string>
+    <string name="perm_why_1">请求从相册选择照片的权限</string>
+    <string name="perm_why_2">请求拍摄照片的权限</string>
+    <string name="ok_string">确认</string>
+    <string name="perm_denied">没有权限</string>
+    <string name="invalid_phone">无效的电话号码</string>
+    <string name="invalid_username">无效的用户名，至少三位</string>
+    <string name="lbl_forgot_password">忘记密码?</string>
+    <string name="logout_title">退出</string>
+    <string name="minimum_password">密码太短请输入至少六位数。</string>
+    <string name="new_pass">新密码</string>
+    <string name="password_failed_updated">密码更新失败</string>
+    <string name="phone_failed_updated">手机号码更新失败</string>
+    <string name="phone_updated">手机号码已更新</string>
+    <string name="refuse_reservation_button">拒绝</string>
+    <string name="remove_biker">注销账户</string>
+    <string name="reservation_title">订单</string>
+    <string name="send_password_reset_email">发送密码重置邮箱</string>
+    <string name="sign_up">注册</string>
+    <string name="title_activity_login">登陆</string>
+    <string name="title_activity_profile">Firebase</string>
+    <string name="title_activity_reset_password">重置密码</string>
+    <string name="title_activity_task">主页</string>
+    <string name="username_failed_update">更新用户名失败</string>
+    <string name="username_updated">用户名已更新</string>
+    <string name="welcome_biker">欢迎成为我们中的一员，工作愉快！</string>
+    <string name="invalid_mail">请输入有效的邮箱</string>
+    <string name="hint_email">邮箱</string>
+    <string name="hint_name">用户名</string>
+    <string name="hint_new_email">新邮箱</string>
+    <string name="hint_password">密码</string>
+    <string name="forgot_password_msg">请输入您的注册邮箱查收重置密码邮件</string>
+    <string name="enter_email">请输入您的邮箱</string>
+    <string name="email_updated">邮箱地址已更新请使用新的邮箱地址重新登陆</string>
+    <string name="email_failed_updated">更新邮箱失败</string>
+    <string name="change_email">更改邮箱</string>
+    <string name="change_password">更改地址</string>
+    <string name="complete_rest_btn">注册完成</string>
+    <string name="create_profile_failed">个人主页更新失败</string>
+    <string name="btn_sign_out">退出登陆</string>
+    <string name="btn_send">发送</string>
+    <string name="btn_reset_password">重置密码</string>
+    <string name="btn_remove">删除</string>
+    <string name="btn_login">登录</string>
+    <string name="accept_reservation_button">接收订单</string>
+    <string name="action_settings">设置</string>
+    <string name="action_settings_firebase">Firebase Account</string>
+    <string name="action_sign_in_short">注册</string>
+    <string name="auth_failed">认证失败</string>
+    <string name="became_biker">成为我们的骑手！</string>
+    <string name="became_biker2">想要成为一名骑手吗？</string>
+    <string name="biker_description">个人简介</string>
+    <string name="biker_name">用户名</string>
+    <string name="biker_phone">联系方式</string>
+    <string name="btn_back"><![CDATA[<< 返回]]></string>
+    <string name="btn_change">更改</string>
+    <string name="btn_forgot_password">忘记您的密码 ？</string>
+    <string name="btn_link_to_login">已有账户，点击登陆</string>
+    <string name="btn_link_to_register">还没有账户？立即注册！</string>
+    <string name="completed_reservations_activity_title">完成订单</string>
+    <string name="conclude_delivery">完成派送</string>
+    <string name="set_your_status">设置状态</string>
+    <string name="working_status">工作状态</string>
+    <string name="msg_start_working">请上线才能开始接单</string>
+    <string name="msg_conn_working">请必需保持网络连接，以便商家知道您当前在线工作，否则当前软件无法正常工作!</string>
+    <string name="msg_not_available_working">当您要停止工作时，请把状态设置为离线。</string>
+    <string name="msg_remeber_switch_off">当您要停止派送时，请开启离线状态，否则您需要完成最后一单工作才能开启离线</string>
+    <string name="msg_no_delivery">等待派送通知…\n当前没有任何派送通知。当您有新的派送通知时，通知会在此处显示.请保持您的网络正常连接，以便接受新的派送通知。</string>
+    <string name="alert_connection_start">检查您的网络连接.您的状态无法恢复，当您的网络连接通畅时状态可以自动恢复</string>
+    <string name="msg_waiting_status">等待同步更新…\n请保持连接</string>
+    <string name="msg_status_off">您当前处于离线状态，请开始上线并开始工作。</string>
+    <string name="msg_wrong_code">派送完成失败，因为您输入了错误的验证码，请重试</string>
+    <string name="msg_tracking_activated">跟踪系统已开始</string>
+    <string name="status_actually_changed">当您的状态发生改变时，系统会通知您！</string>
+    <string name="tracking_enabled_notif">地理位置跟踪已开启，点击关闭</string>
+    <string name="toast_status_on">您已在线.等待新的订单…</string>
+    <string name="toast_status_off">您已离线.您将不再接收新的订单.</string>
+    <string name="action_statistics">数据分析</string>
+    <string name="action_completed_reservations">完成订单</string>
+    <string name="action_status">状态</string>
+    <string name="statistics_activity_title">分析</string>
+    <string name="location">在线/离线</string>
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_home">主页</string>
+    <string name="startLocation">开始工作</string>
+    <string name="stopLocation">停止工作</string>
+    <string name="contentDescription">TODO</string>
+
+</resources>

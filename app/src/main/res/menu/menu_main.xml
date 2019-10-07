@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/current_status_biker"
+        android:orderInCategory="1"
+        android:icon="@android:drawable/button_onoff_indicator_off"
+        android:title="@string/action_status"
+        app:showAsAction="always|withText"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/location"
+        android:orderInCategory="2"
+        android:title="@string/location"
+        app:showAsAction="never"
+        android:enabled="false"/>
+
+
+</menu>

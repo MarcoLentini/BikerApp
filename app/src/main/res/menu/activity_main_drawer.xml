@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/nav_home" />
+        <item
+            android:id="@+id/nav_completed_reservation"
+            android:icon="@drawable/ic_baseline_history"
+            android:title="@string/action_completed_reservations" />
+
+        <item
+            android:id="@+id/nav_statistics"
+            android:icon="@drawable/ic_statistics"
+            android:title="@string/action_statistics" />
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_setting"
+            android:title="@string/action_settings" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_account_logout"
+            android:title="@string/logout_title" />
+    </group>
+
+</menu>

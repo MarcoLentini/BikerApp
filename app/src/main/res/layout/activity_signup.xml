@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/colorPrimary"
+
+    tools:context="com.example.bikerapp.Information.SignupActivity"
+   >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <RelativeLayout
+            android:id="@+id/linearLayoutOffer"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <RelativeLayout
+                android:id="@+id/user_image11"
+                android:layout_width="@dimen/toolbar_profile_width"
+                android:layout_height="@dimen/toolbar_profile_width"
+                android:background="@color/white"
+                > <!-- border width -->
+
+                <ImageView
+                    android:id="@+id/user_image1"
+                    android:layout_width="@dimen/toolbar_profile_width"
+                    android:layout_height="@dimen/toolbar_profile_width"
+                    android:src="@drawable/img_biker_1"
+
+
+                    />
+            </RelativeLayout>
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/background_img_user1"
+                android:layout_width="48sp"
+                android:layout_height="48sp"
+                android:layout_alignBottom="@id/user_image11"
+                android:layout_alignEnd="@id/user_image11"
+                android:layout_alignRight="@id/user_image11"
+                android:layout_marginBottom="-24dp"
+                android:layout_marginEnd="-24dp"
+                android:layout_marginRight="-24dp"
+
+                android:scaleType="centerInside"
+                android:src="@drawable/background"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="2sp"
+                app:civ_shadow="true"
+                app:civ_shadow_radius="1" />
+
+            <ImageView
+                android:id="@+id/img_plus1"
+                android:layout_width="43sp"
+                android:layout_height="44sp"
+                android:layout_alignStart="@+id/background_img_user1"
+                android:layout_alignLeft="@+id/background_img_user1"
+                android:layout_alignTop="@+id/background_img_user1"
+                android:layout_alignEnd="@+id/background_img_user1"
+                android:layout_alignRight="@+id/background_img_user1"
+                android:layout_alignBottom="@+id/background_img_user1"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@string/app_name"
+                android:cropToPadding="false"
+                android:src="@drawable/ic_camera"
+                android:tint="@android:color/white" />
+
+
+        </RelativeLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/user_name_user1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/username_title"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:focusable="true"
+                android:nextFocusDown="@id/email_user1"
+                android:textColor="@android:color/white" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/email_user1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email_title"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:focusable="true"
+                android:textColor="@android:color/white" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/password_user1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="true"
+                android:hint="@string/hint_password"
+                android:nextFocusDown="@id/user_phone_user1"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:focusable="true"
+                android:textColor="@android:color/white" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/user_phone_user1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/biker_phone"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:focusable="true"
+                android:textColor="@android:color/white" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <Button
+            android:id="@+id/sign_up_button1"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/bg_main"
+            android:text="@string/action_sign_in_short"
+            android:textColor="@color/btn_login_bg"
+            android:textStyle="bold" />
+
+
+        <!-- Link to Login Screen -->
+
+        <Button
+            android:id="@+id/sign_in_button1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="@null"
+            android:text="@string/btn_link_to_login"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone" />
+    </LinearLayout>
+    </ScrollView>
+</android.support.design.widget.CoordinatorLayout>

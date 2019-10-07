@@ -1,15 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.bikerapp" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.bikerapp">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/biker_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/biker_logo"
+        android:logo="@drawable/biker_logo"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-        <activity android:name=".MainActivity" >
+        android:theme="@style/AppTheme">
+        <activity android:name=".Statistics.StatisticsActivity"></activity>
+        <activity
+            android:name=".CompletedReservations.CompletedReservationsActivity"
+            android:screenOrientation="portrait" />
+
+        <receiver android:name=".Helper.MyReceiver">
+            <intent-filter>
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                    android:screenOrientation="portrait" />
+                <action
+                    android:name="android.net.wifi.WIFI_STATE_CHANGED"
+                    android:screenOrientation="portrait" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".Location.TrackingService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".Location.LocationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_task"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".Information.ModifyInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Information.ChangePwdActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Information.BikerInformationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Information.SignupActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Information.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

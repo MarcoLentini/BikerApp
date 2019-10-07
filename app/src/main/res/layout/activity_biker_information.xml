@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:paddingBottom="32dp"
+    >
+
+<android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".Information.BikerInformationActivity">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <RelativeLayout
+            android:id="@+id/img_profile1"
+            android:layout_width="@dimen/toolbar_profile_width"
+            android:layout_height="@dimen/toolbar_profile_width"
+            android:background="@color/white"
+            > <!-- border width -->
+
+            <ImageView
+                android:id="@+id/img_profile"
+                android:layout_width="@dimen/toolbar_profile_width"
+                android:layout_height="@dimen/toolbar_profile_width"
+                android:src="@drawable/img_biker_1"
+
+
+                />
+        </RelativeLayout>
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/background_img"
+            android:layout_width="48sp"
+            android:layout_height="48sp"
+            android:layout_alignBottom="@id/img_profile1"
+            android:layout_alignEnd="@id/img_profile1"
+            android:layout_alignRight="@id/img_profile1"
+            android:layout_marginBottom="-24dp"
+            android:layout_marginEnd="-24dp"
+            android:layout_marginRight="-24dp"
+
+            android:scaleType="centerInside"
+            android:src="@drawable/background"
+            app:civ_border_color="@android:color/white"
+            app:civ_border_width="2sp"
+            app:civ_shadow="true"
+            app:civ_shadow_radius="1" />
+
+        <ImageView
+            android:id="@+id/img_plus"
+            android:layout_width="43sp"
+            android:layout_height="44sp"
+            android:layout_alignStart="@+id/background_img"
+            android:layout_alignLeft="@+id/background_img"
+            android:layout_alignTop="@+id/background_img"
+            android:layout_alignEnd="@+id/background_img"
+            android:layout_alignRight="@+id/background_img"
+            android:layout_alignBottom="@+id/background_img"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/app_name"
+            android:cropToPadding="false"
+            android:src="@drawable/ic_camera"
+            android:tint="@android:color/white" />
+
+        -->
+    </RelativeLayout>
+
+
+
+
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout2">
+            <TextView
+                android:id="@+id/textViewUserName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:drawableStart="@drawable/ic_account_name"
+                android:drawableLeft="@drawable/ic_account_name"
+                android:drawableEnd="@drawable/ic_account_edit"
+                android:drawableRight="@drawable/ic_account_edit"
+                android:drawablePadding="12dp"
+                android:maxEms="10"
+                android:maxLines="1"
+                android:text="@string/default_user_name"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="395dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorDivider"
+                app:layout_constraintBottom_toTopOf="@+id/textViewUserEmail"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewUserName" />
+
+            <TextView
+                android:id="@+id/textViewUserEmail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:drawableStart="@drawable/ic_account_email"
+                android:drawableLeft="@drawable/ic_account_email"
+                android:drawableEnd="@drawable/ic_account_edit"
+                android:drawableRight="@drawable/ic_account_edit"
+                android:drawablePadding="12dp"
+                android:maxEms="10"
+                android:maxLines="1"
+                android:text="@string/default_user_email"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewUserName" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="395dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorDivider"
+                app:layout_constraintBottom_toTopOf="@+id/textViewUserPhoneNumber"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewUserEmail" />
+
+            <TextView
+                android:id="@+id/textViewUserPhoneNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:drawableStart="@drawable/ic_account_cellphone"
+                android:drawableLeft="@drawable/ic_account_cellphone"
+                android:drawableEnd="@drawable/ic_account_edit"
+                android:drawableRight="@drawable/ic_account_edit"
+                android:drawablePadding="12dp"
+                android:maxEms="10"
+                android:maxLines="1"
+                android:text="@string/default_user_phone_number"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewUserEmail" />
+
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="395dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorDivider"
+                app:layout_constraintBottom_toTopOf="@+id/textViewChangePassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewUserPhoneNumber" />
+
+
+            <TextView
+                android:id="@+id/textViewChangePassword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:drawableStart="@drawable/ic_account_password"
+                android:drawableLeft="@drawable/ic_account_password"
+                android:drawableEnd="@drawable/ic_account_edit"
+                android:drawableRight="@drawable/ic_account_edit"
+                android:drawablePadding="12dp"
+                android:maxEms="20"
+                android:maxLines="1"
+                android:text="@string/password_title"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewUserPhoneNumber" />
+
+              <View
+                android:id="@+id/divider5"
+                android:layout_width="395dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorDivider"
+                app:layout_constraintBottom_toTopOf="@+id/textViewRemoveUser"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewChangePassword" />
+
+
+            <TextView
+                android:id="@+id/textViewRemoveUser"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:drawableStart="@drawable/ic_account_remove_user"
+                android:drawableLeft="@drawable/ic_account_remove_user"
+                android:drawablePadding="12dp"
+                android:maxEms="20"
+                android:maxLines="1"
+                android:text="@string/remove_biker"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewChangePassword" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="395dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorDivider"
+                app:layout_constraintBottom_toTopOf="@+id/textViewLogOut"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewRemoveUser" />
+
+
+            <TextView
+                android:id="@+id/textViewLogOut"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="32dp"
+                android:paddingBottom="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:drawableStart="@drawable/ic_account_logout"
+                android:drawableLeft="@drawable/ic_account_logout"
+                android:drawablePadding="12dp"
+                android:maxEms="20"
+                android:maxLines="1"
+                android:text="@string/logout_title"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewRemoveUser" />
+
+
+        </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
+
+
